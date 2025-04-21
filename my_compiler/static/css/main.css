@@ -1,0 +1,359 @@
+/* Main CSS (styles.css) - Dark Theme with Accent Colors */
+
+:root {
+    /* Dark theme base colors */
+    --bg-dark: #121212;
+    --bg-medium: #1e1e1e;
+    --bg-light: #2d2d2d;
+    --text-primary: #e0e0e0;
+    --text-secondary: #a0a0a0;
+    --text-muted: #777777;
+    --border-color: #3d3d3d;
+    
+    /* Accent colors */
+    --accent-primary: #00bcd4;    /* Cyan accent */
+    --accent-secondary: #7e57c2;  /* Purple accent */
+    --accent-success: #4caf50;    /* Green for success states */
+    --accent-warning: #ff9800;    /* Orange for warnings */
+    --accent-danger: #f44336;     /* Red for errors/danger */
+  }
+  
+  /* Base page styling */
+  body {
+    background-color: var(--bg-dark);
+    color: var(--text-primary);
+    font-family: 'Roboto', 'Segoe UI', Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    line-height: 1.6;
+  }
+  
+  /* Main content container */
+  main, .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 1rem 2rem;
+  }
+  
+  /* Headings */
+  h1, h2, h3, h4, h5, h6 {
+    color: var(--text-primary);
+    font-weight: 500;
+    margin-bottom: 1rem;
+  }
+  
+  h1 {
+    font-size: 2.5rem;
+    color: var(--accent-primary);
+    border-bottom: 2px solid var(--accent-primary);
+    padding-bottom: 0.5rem;
+    margin-bottom: 1.5rem;
+  }
+  
+  h2 {
+    font-size: 2rem;
+    color: var(--text-primary);
+  }
+  
+  h3 {
+    font-size: 1.5rem;
+    color: var(--accent-secondary);
+  }
+  
+  /* Links */
+  a {
+    color: var(--accent-primary);
+    text-decoration: none;
+    transition: color 0.2s ease-in-out;
+  }
+  
+  a:hover {
+    color: var(--accent-secondary);
+    text-decoration: underline;
+  }
+  
+  /* Navigation bar */
+  nav {
+    background-color: var(--bg-medium);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+    padding: 0.5rem 2rem;
+  }
+  
+  nav ul {
+    list-style-type: none;
+    display: flex;
+    margin: 0;
+    padding: 0;
+  }
+  
+  nav ul li {
+    margin-right: 2rem;
+    position: relative;
+  }
+  
+  nav ul li a {
+    color: var(--text-primary);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-size: 0.9rem;
+    padding: 1rem 0;
+    display: inline-block;
+    position: relative;
+    transition: all 0.3s ease;
+  }
+  
+  nav ul li a::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 2px;
+    bottom: 0;
+    left: 0;
+    background-color: var(--accent-primary);
+    transition: width 0.3s ease;
+  }
+  
+  nav ul li a:hover {
+    color: var(--accent-primary);
+    text-decoration: none;
+  }
+  
+  nav ul li a:hover::after {
+    width: 100%;
+  }
+  
+  /* Buttons */
+  button, 
+  input[type="submit"],
+  input[type="button"] {
+    background-color: var(--accent-primary);
+    color: #fff;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 4px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    margin: 0.5rem 0.25rem;
+  }
+  
+  button:hover, 
+  input[type="submit"]:hover,
+  input[type="button"]:hover {
+    background-color: #00a0b7;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transform: translateY(-2px);
+  }
+  
+  /* Secondary button style */
+  .btn-secondary,
+  button[type="reset"] {
+    background-color: var(--bg-light);
+    color: var(--text-primary);
+    border: 1px solid var(--border-color);
+  }
+  
+  .btn-secondary:hover,
+  button[type="reset"]:hover {
+    background-color: var(--bg-medium);
+  }
+  
+  /* Danger button style */
+  .btn-danger,
+  button[onclick*="delete"] {
+    background-color: var(--accent-danger);
+  }
+  
+  .btn-danger:hover,
+  button[onclick*="delete"]:hover {
+    background-color: #d32f2f;
+  }
+  
+  /* Forms and inputs */
+  input[type="text"],
+  input[type="password"],
+  textarea,
+  select {
+    background-color: var(--bg-light);
+    color: var(--text-primary);
+    border: 1px solid var(--border-color);
+    padding: 0.75rem 1rem;
+    border-radius: 4px;
+    width: 100%;
+    font-family: inherit;
+    font-size: 1rem;
+    transition: border-color 0.2s ease;
+  }
+  
+  input[type="text"]:focus,
+  input[type="password"]:focus,
+  textarea:focus,
+  select:focus {
+    border-color: var(--accent-primary);
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(0, 188, 212, 0.25);
+  }
+  
+  /* Textarea for code */
+  textarea#code {
+    font-family: 'Fira Code', 'Consolas', monospace;
+    font-size: 0.95rem;
+    min-height: 300px;
+    padding: 1rem;
+    line-height: 1.5;
+    tab-size: 4;
+  }
+  
+  /* Tables */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1rem 0;
+    background-color: var(--bg-medium);
+  }
+  
+  th {
+    background-color: var(--bg-light);
+    padding: 0.75rem 1rem;
+    text-align: left;
+    font-weight: 500;
+  }
+  
+  td {
+    padding: 0.75rem 1rem;
+    border-top: 1px solid var(--border-color);
+  }
+  
+  tr:hover {
+    background-color: rgba(0, 188, 212, 0.08);
+  }
+  
+  /* Code blocks */
+  pre {
+    background-color: var(--bg-light);
+    padding: 1rem;
+    border-radius: 4px;
+    overflow-x: auto;
+    font-family: 'Fira Code', 'Consolas', monospace;
+    font-size: 0.9rem;
+    line-height: 1.5;
+    border-left: 4px solid var(--accent-primary);
+  }
+  
+  /* CodeMirror customizations */
+  .CodeMirror {
+    font-family: 'Fira Code', 'Consolas', monospace !important;
+    height: auto !important;
+    min-height: 350px !important;
+    border-radius: 4px !important;
+    border: 1px solid var(--border-color) !important;
+  }
+  
+  .CodeMirror-gutters {
+    background-color: var(--bg-dark) !important;
+    border-right: 1px solid var(--border-color) !important;
+  }
+  
+  /* Card-like sections */
+  .card {
+    background-color: var(--bg-medium);
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin: 1rem 0;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+  
+  .card-header {
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 1rem;
+    margin-bottom: 1rem;
+  }
+  
+  /* Status messages */
+  .status {
+    padding: 1rem;
+    border-radius: 4px;
+    margin: 1rem 0;
+  }
+  
+  .success {
+    background-color: rgba(76, 175, 80, 0.1);
+    border-left: 4px solid var(--accent-success);
+    color: var(--accent-success);
+  }
+  
+  .warning {
+    background-color: rgba(255, 152, 0, 0.1);
+    border-left: 4px solid var(--accent-warning);
+    color: var(--accent-warning);
+  }
+  
+  .error {
+    background-color: rgba(244, 67, 54, 0.1);
+    border-left: 4px solid var(--accent-danger);
+    color: var(--accent-danger);
+  }
+  
+  /* Normas section - index page */
+  .normas {
+    background-color: var(--bg-medium);
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin: 2rem 0;
+    border-left: 4px solid var(--accent-secondary);
+  }
+  
+  .normas h2 {
+    color: var(--accent-secondary);
+    margin-top: 0;
+  }
+  
+  .normas ul {
+    padding-left: 1.5rem;
+  }
+  
+  .normas li {
+    margin-bottom: 0.5rem;
+  }
+  
+  /* Home page buttons */
+  .botones {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin: 2rem 0;
+  }
+  
+  .botones button {
+    flex: 1;
+    min-width: 200px;
+    padding: 1rem;
+    font-size: 1.1rem;
+  }
+  
+  /* Responsive design */
+  @media (max-width: 768px) {
+    nav ul {
+      flex-direction: column;
+    }
+    
+    nav ul li {
+      margin-right: 0;
+      margin-bottom: 0.5rem;
+    }
+    
+    h1 {
+      font-size: 2rem;
+    }
+    
+    .botones {
+      flex-direction: column;
+    }
+  }
+  
+  /* Utility classes */
+  .mt-1 { margin-top: 1rem; }
+  .mb-1 { margin-bottom: 1rem; }
+  .text-center { text-align: center; }
+  .text-right { text-align: right; }

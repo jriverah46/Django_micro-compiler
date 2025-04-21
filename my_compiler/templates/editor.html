@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>My Compiler</h1>
+
+<!-- Estilos de CodeMirror -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/codemirror.min.css">
+<!-- Add our custom stylesheets -->
+<link rel="stylesheet" href="/static/css/main.css">
+<link rel="stylesheet" href="/static/css/code_mirror.css">
+
+<!-- Formulario principal -->
+<form method="POST">
+    {% csrf_token %}
+    <div class="editor-container">
+        <textarea id="code" name="code" placeholder="Write your code" rows="10" cols="50">{{ code|default_if_none:"" }}</textarea>
+    </div>
+
+    <div class="botones">
+        <button type="submit" formaction="{% url 'compile' %}" class="btn-primary">Compile</button>
+        <button type="submit" formaction="{% url 'tokens' %}" class="btn-secondary">Tokens</button>
+        <input type="hidden" name="from_editor" value="true">
+        <button type="submit" formaction="{% url 'save_file' %}" class="btn-success">Save to DB</button>
+    </div>
+</form>
+
+<!-- Scripts de CodeMirror -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/codemirror.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/addon/edit/matchbrackets.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/addon/mode/simple.min.js"></script>
+
+<!-- Modo personalizado: define tu lenguaje -->
+<script>
+    CodeMirror.defineSimpleMode("myLang", {
+        start: [
+            {regex: /\b(write|capture|if|then|end-if|and|or|not)\b/, token: "keyword"},
+            {regex: /::/, token: "def"},
+            {regex: /"(?:[^\\]|\\.)*?"/, token: "string"},
+            {regex: /[-+]?[0-9]+/, token: "number"},
+            {regex: /\/\/.*/, token: "comment"},
+        ],
+        meta: {
+            lineComment: "//"
+        }
+    });
+
+    var editor = CodeMirror.fromTextArea(document.getElementById("code"), {
+        lineNumbers: true,
+        mode: "myLang",
+        theme: "custom", // Using our custom theme
+        matchBrackets: true,
+        indentUnit: 4,
+        tabSize: 4,
+        lineWrapping: true,
+        autoCloseBrackets: true,
+        extraKeys: {"Ctrl-Space": "autocomplete"}
+    });
+</script>
+{% endblock %}

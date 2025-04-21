@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<h1>Files</h1>
+
+<div class="card">
+    <table>
+        <thead>
+            <tr>
+                <th>File Name</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for file in files %}
+            <tr>
+                <td>{{ file.name }}</td>
+                <td class="file-actions">
+                    <!-- Open File -->
+                    <form action="{% url 'open_file' file.id %}" method="get" style="display:inline;">
+                        <button type="submit" class="btn-sm">Open File</button>
+                    </form>
+                    
+                    <!-- Delete File -->
+                    <form action="{% url 'delete_file' file.id %}" method="post" style="display:inline;">
+                        {% csrf_token %}
+                        <button type="submit" class="btn-sm btn-danger" onclick="return confirm('¿Seguro que quieres eliminar este archivo?')">Delete</button>
+                    </form>
+                    
+                    <!-- Compile -->
+                    <form action="{% url 'open_file' file.id %}" method="get" style="display:inline;">
+                        <input type="hidden" name="action" value="compile">
+                        <button type="submit" class="btn-sm">Compile</button>
+                    </form>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="2" class="text-center">No hay archivos guardados aún.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

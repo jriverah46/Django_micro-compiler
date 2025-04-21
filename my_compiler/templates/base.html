@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Compiler</title>
+    <!-- Add our main stylesheet -->
+    <link rel="stylesheet" href="/static/css/main.css ">
+    <!-- Google Fonts - Roboto and Fira Code -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Fira+Code:wght@400;500&display=swap">
+</head>
+<body>
+
+    <!-- Responsive NavBar -->
+    <nav>
+        <ul>
+            <li><a href="{% url 'home' %}">Home</a></li>
+            <li><a href="{% url 'editor' %}">Editor</a></li>
+            <li><a href="{% url 'files' %}">Files</a></li>
+            <li><a href="{% url 'new_file' %}">New File</a></li>
+        </ul>
+    </nav>
+
+    <!-- Main content container -->
+    <main class="container">
+        {% block content %}
+        {% endblock %}
+    </main>
+
+    
+
+</body>
+</html>

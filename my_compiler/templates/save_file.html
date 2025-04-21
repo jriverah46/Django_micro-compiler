@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Guardar Nuevo Archivo</h1>
+
+<form method="POST" action="{% url 'save_file' %}">
+    {% csrf_token %}
+
+    <div>
+        <label for="name">Nombre del Archivo:</label><br>
+        <input type="text" id="name" name="name" required placeholder="Ej. mi_programa.txt">
+    </div>
+    
+    <br>
+    
+    <div>
+        <label for="code">Código:</label><br>
+        <textarea id="code" name="code" rows="15" cols="80" placeholder="Write your code here...">{{ code|default_if_none:"" }}</textarea>
+    </div>
+
+    <br>
+
+    <div>
+        <button type="submit">Guardar Archivo</button>
+    </div>
+</form>
+{% endblock %}

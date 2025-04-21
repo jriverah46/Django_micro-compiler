@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Tokens</h1>
+
+{% if code %}
+<h3>Code:</h3>
+<pre>{{ code }}</pre>
+{% endif %}
+
+{% if tokens %}
+<h3>Tokens:</h3>
+<table border="1" cellpadding="5">
+    <tr>
+        <th>Type</th>
+        <th>Value</th>
+        <th>Line</th>
+        <th>Position</th>
+    </tr>
+    {% for token in tokens %}
+    <tr>
+        <td>{{ token.type }}</td>
+        <td>{{ token.value }}</td>
+        <td>{{ token.lineno }}</td>
+        <td>{{ token.lexpos }}</td>
+    </tr>
+    {% endfor %}
+</table>
+{% else %}
+<p>No tokens to show.</p>
+{% endif %}
+
+<form action="{% url 'tokens' %}" method="get" style="display:inline;">
+    <input type="hidden" name="action" value="back">
+    <input type="hidden" name="code" value="{{ code|default_if_none:'' }}">
+
+    <button type="submit">Back to editor</button>
+</form>
+{% endblock %}

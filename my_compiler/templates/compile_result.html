@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+{% block content %}
+    <h2>Result:</h2>
+    <pre>{{ result }}</pre>
+    <form action="{% url 'compile' %}" method="get" style="display:inline;">
+        <input type="hidden" name="action" value="volver">
+        <input type="hidden" name="code" value="{{ code|escape }}">
+        <button type="submit">Volver</button>
+    </form>
+{% endblock %}

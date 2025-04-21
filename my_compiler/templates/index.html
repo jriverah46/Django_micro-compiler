@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Compiler</title>
+    
+</head>
+<body>
+
+    <h1>My Compiler</h1>
+
+    <div class="normas">
+        <h2>Normas del Compilador</h2>
+        <p>Este compilador soporta un conjunto de instrucciones básicas para la evaluación de expresiones aritméticas. Las normas son las siguientes:</p>
+        <ul>
+            <li>Se pueden usar operadores matemáticos como +, -, *, /.</li>
+            <li>Las expresiones deben estar correctamente formateadas con paréntesis cuando sea necesario.</li>
+            <li>Los números deben ser enteros y positivos.</li>
+            <li>Las instrucciones deben terminar con un punto y coma (;).</li>
+        </ul>
+    </div>
+
+    <div class="botones">
+        <button onclick="window.location.href='/new_file'">New File</button>
+        <button onclick="window.location.href='/files'">Open File</button>
+    </div>
+
+</body>
+</html>
+{% endblock %}
