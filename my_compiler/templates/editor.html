@@ -1,13 +1,14 @@
 {% extends 'base.html' %}
 
 {% block content %}
+{% load static %}
 <h1>My Compiler</h1>
 
 <!-- Estilos de CodeMirror -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/codemirror.min.css">
 <!-- Add our custom stylesheets -->
-<link rel="stylesheet" href="/static/css/main.css">
-<link rel="stylesheet" href="/static/css/code_mirror.css">
+<link rel="stylesheet" href="{% static 'css/main.css' %} ">
+<link rel="stylesheet" href="{% static 'css/code_mirror.css' %} ">
 
 <!-- Formulario principal -->
 <form method="POST">
