@@ -118,6 +118,13 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
+ALLOWED_HOSTS = [
+    'django-compiler-f3g7fcanbeg4ezcm.eastus2-01.azurewebsites.net',
+    '127.0.0.1',
+    'localhost'
+]
+
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
