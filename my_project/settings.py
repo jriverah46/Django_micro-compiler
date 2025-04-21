@@ -126,6 +126,9 @@ ALLOWED_HOSTS = [
     'localhost'
 ]
 
+CSRF_TRUSTED_ORIGINS = [
+    'https://django-compiler-f3g7fcanbeg4ezcm.eastus2-01.azurewebsites.net',
+]
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
