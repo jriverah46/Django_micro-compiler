@@ -93,7 +93,7 @@ if os.environ.get('UseAzureDb') == 'true':
             'OPTIONS': {
     'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
     'ssl': {
-        'ssl-mode': 'REQUIRED',
+        'ssl_mode': 'REQUIRED',
     },
     'charset': 'utf8mb4',
 },
