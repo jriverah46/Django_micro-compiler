@@ -91,8 +91,8 @@ if os.environ.get('UseAzureDb') == 'true':
             'HOST': os.environ.get('DbHost'),
             'PORT': '3306',
             'OPTIONS': {
-                'ssl': {'ssl-ca': '/path/to/BaltimoreCyberTrustRoot.crt.pem'},
-            },
+            'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
+        },
         }
     }
 else:
