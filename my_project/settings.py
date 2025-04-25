@@ -91,12 +91,12 @@ if os.environ.get('UseAzureDb') == 'true':
             'HOST': os.environ.get('DbHost'),
             'PORT': '3306',
             'OPTIONS': {
-    'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
-    'ssl': {
-        'ssl_mode': 'REQUIRED',
-    },
-    'charset': 'utf8mb4',
-},
+            'ssl': {
+                'ssl_ca': '/path/to/ca-cert.pem',       
+                'ssl_cert': '/path/to/client-cert.pem', 
+                'ssl_key': '/path/to/client-key.pem',   
+            }
+        },
         }
     }
 else:
