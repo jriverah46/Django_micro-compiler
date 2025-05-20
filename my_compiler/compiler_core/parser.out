@@ -7,74 +7,78 @@ Rule 1     program -> instructions
 Rule 2     instructions -> instruction instructions
 Rule 3     instructions -> instruction
 Rule 4     instruction -> WRITE LPAREN write_args RPAREN END
-Rule 5     write_args -> expression
-Rule 6     write_args -> STRING
-Rule 7     write_args -> STRING COMMA expression
-Rule 8     write_args -> expression COMMA expression
+Rule 5     write_args -> write_args COMMA expression
+Rule 6     write_args -> write_args COMMA STRING
+Rule 7     write_args -> expression
+Rule 8     write_args -> STRING
 Rule 9     instruction -> CAPTURE LPAREN ID RPAREN END
 Rule 10    instruction -> IF LPAREN condition RPAREN THEN instructions ENDIF
 Rule 11    instruction -> ID ASSIGN expression END
-Rule 12    condition -> expression relop expression
-Rule 13    condition -> condition AND condition
-Rule 14    condition -> condition OR condition
-Rule 15    condition -> NOT condition
-Rule 16    relop -> LT
-Rule 17    relop -> LE
-Rule 18    relop -> GT
-Rule 19    relop -> GE
-Rule 20    relop -> EQ
-Rule 21    relop -> NE
-Rule 22    expression -> expression PLUS term
-Rule 23    expression -> expression MINUS term
-Rule 24    expression -> term
-Rule 25    term -> term TIMES factor
-Rule 26    term -> term DIVIDE factor
-Rule 27    term -> factor
-Rule 28    factor -> NUMBER
-Rule 29    factor -> ID
-Rule 30    factor -> LPAREN expression RPAREN
+Rule 12    relop -> LT
+Rule 13    relop -> LE
+Rule 14    relop -> GT
+Rule 15    relop -> GE
+Rule 16    relop -> EQ
+Rule 17    relop -> NE
+Rule 18    expression -> expression PLUS term
+Rule 19    expression -> expression MINUS term
+Rule 20    expression -> term
+Rule 21    term -> term TIMES factor
+Rule 22    term -> term DIVIDE factor
+Rule 23    term -> factor
+Rule 24    factor -> NUMBER
+Rule 25    factor -> ID
+Rule 26    factor -> LPAREN expression RPAREN
+Rule 27    instruction -> WHILE LPAREN condition RPAREN instructions ENDWHILE
+Rule 28    condition -> condition AND condition
+Rule 29    condition -> condition OR condition
+Rule 30    condition -> NOT condition
+Rule 31    condition -> LPAREN condition RPAREN
+Rule 32    condition -> expression relop expression
 
 Terminals, with rules where they appear
 
-AND                  : 13
+AND                  : 28
 ASSIGN               : 11
 CAPTURE              : 9
-COMMA                : 7 8
-DIVIDE               : 26
+COMMA                : 5 6
+DIVIDE               : 22
 END                  : 4 9 11
 ENDIF                : 10
-EQ                   : 20
-GE                   : 19
-GT                   : 18
-ID                   : 9 11 29
+ENDWHILE             : 27
+EQ                   : 16
+GE                   : 15
+GT                   : 14
+ID                   : 9 11 25
 IF                   : 10
-LE                   : 17
-LPAREN               : 4 9 10 30
-LT                   : 16
-MINUS                : 23
-NE                   : 21
-NOT                  : 15
-NUMBER               : 28
-OR                   : 14
-PLUS                 : 22
-RPAREN               : 4 9 10 30
-STRING               : 6 7
+LE                   : 13
+LPAREN               : 4 9 10 26 27 31
+LT                   : 12
+MINUS                : 19
+NE                   : 17
+NOT                  : 30
+NUMBER               : 24
+OR                   : 29
+PLUS                 : 18
+RPAREN               : 4 9 10 26 27 31
+STRING               : 6 8
 THEN                 : 10
-TIMES                : 25
+TIMES                : 21
+WHILE                : 27
 WRITE                : 4
 error                : 
 
 Nonterminals, with rules where they appear
 
-condition            : 10 13 13 14 14 15
-expression           : 5 7 8 8 11 12 12 22 23 30
-factor               : 25 26 27
+condition            : 10 27 28 28 29 29 30 31
+expression           : 5 7 11 18 19 26 32 32
+factor               : 21 22 23
 instruction          : 2 3
-instructions         : 1 2 10
+instructions         : 1 2 10 27
 program              : 0
-relop                : 12
-term                 : 22 23 24 25 26
-write_args           : 4
+relop                : 32
+term                 : 18 19 20 21 22
+write_args           : 4 5 6
 
 Parsing method: LALR
 
@@ -88,11 +92,13 @@ state 0
     (9) instruction -> . CAPTURE LPAREN ID RPAREN END
     (10) instruction -> . IF LPAREN condition RPAREN THEN instructions ENDIF
     (11) instruction -> . ID ASSIGN expression END
+    (27) instruction -> . WHILE LPAREN condition RPAREN instructions ENDWHILE
 
     WRITE           shift and go to state 4
     CAPTURE         shift and go to state 5
     IF              shift and go to state 7
     ID              shift and go to state 6
+    WHILE           shift and go to state 8
 
     program                        shift and go to state 1
     instructions                   shift and go to state 2
@@ -121,478 +127,541 @@ state 3
     (9) instruction -> . CAPTURE LPAREN ID RPAREN END
     (10) instruction -> . IF LPAREN condition RPAREN THEN instructions ENDIF
     (11) instruction -> . ID ASSIGN expression END
+    (27) instruction -> . WHILE LPAREN condition RPAREN instructions ENDWHILE
 
     $end            reduce using rule 3 (instructions -> instruction .)
+    ENDWHILE        reduce using rule 3 (instructions -> instruction .)
     ENDIF           reduce using rule 3 (instructions -> instruction .)
     WRITE           shift and go to state 4
     CAPTURE         shift and go to state 5
     IF              shift and go to state 7
     ID              shift and go to state 6
+    WHILE           shift and go to state 8
 
     instruction                    shift and go to state 3
-    instructions                   shift and go to state 8
+    instructions                   shift and go to state 9
 
 state 4
 
     (4) instruction -> WRITE . LPAREN write_args RPAREN END
 
-    LPAREN          shift and go to state 9
+    LPAREN          shift and go to state 10
 
 
 state 5
 
     (9) instruction -> CAPTURE . LPAREN ID RPAREN END
 
-    LPAREN          shift and go to state 10
+    LPAREN          shift and go to state 11
 
 
 state 6
 
     (11) instruction -> ID . ASSIGN expression END
 
-    ASSIGN          shift and go to state 11
+    ASSIGN          shift and go to state 12
 
 
 state 7
 
     (10) instruction -> IF . LPAREN condition RPAREN THEN instructions ENDIF
 
-    LPAREN          shift and go to state 12
+    LPAREN          shift and go to state 13
 
 
 state 8
 
-    (2) instructions -> instruction instructions .
+    (27) instruction -> WHILE . LPAREN condition RPAREN instructions ENDWHILE
 
-    $end            reduce using rule 2 (instructions -> instruction instructions .)
-    ENDIF           reduce using rule 2 (instructions -> instruction instructions .)
+    LPAREN          shift and go to state 14
 
 
 state 9
 
-    (4) instruction -> WRITE LPAREN . write_args RPAREN END
-    (5) write_args -> . expression
-    (6) write_args -> . STRING
-    (7) write_args -> . STRING COMMA expression
-    (8) write_args -> . expression COMMA expression
-    (22) expression -> . expression PLUS term
-    (23) expression -> . expression MINUS term
-    (24) expression -> . term
-    (25) term -> . term TIMES factor
-    (26) term -> . term DIVIDE factor
-    (27) term -> . factor
-    (28) factor -> . NUMBER
-    (29) factor -> . ID
-    (30) factor -> . LPAREN expression RPAREN
+    (2) instructions -> instruction instructions .
 
-    STRING          shift and go to state 16
-    NUMBER          shift and go to state 19
-    ID              shift and go to state 20
-    LPAREN          shift and go to state 13
+    $end            reduce using rule 2 (instructions -> instruction instructions .)
+    ENDWHILE        reduce using rule 2 (instructions -> instruction instructions .)
+    ENDIF           reduce using rule 2 (instructions -> instruction instructions .)
 
-    write_args                     shift and go to state 14
-    expression                     shift and go to state 15
-    term                           shift and go to state 17
-    factor                         shift and go to state 18
 
 state 10
 
-    (9) instruction -> CAPTURE LPAREN . ID RPAREN END
+    (4) instruction -> WRITE LPAREN . write_args RPAREN END
+    (5) write_args -> . write_args COMMA expression
+    (6) write_args -> . write_args COMMA STRING
+    (7) write_args -> . expression
+    (8) write_args -> . STRING
+    (18) expression -> . expression PLUS term
+    (19) expression -> . expression MINUS term
+    (20) expression -> . term
+    (21) term -> . term TIMES factor
+    (22) term -> . term DIVIDE factor
+    (23) term -> . factor
+    (24) factor -> . NUMBER
+    (25) factor -> . ID
+    (26) factor -> . LPAREN expression RPAREN
 
-    ID              shift and go to state 21
+    STRING          shift and go to state 18
+    NUMBER          shift and go to state 21
+    ID              shift and go to state 22
+    LPAREN          shift and go to state 15
 
+    write_args                     shift and go to state 16
+    expression                     shift and go to state 17
+    term                           shift and go to state 19
+    factor                         shift and go to state 20
 
 state 11
 
-    (11) instruction -> ID ASSIGN . expression END
-    (22) expression -> . expression PLUS term
-    (23) expression -> . expression MINUS term
-    (24) expression -> . term
-    (25) term -> . term TIMES factor
-    (26) term -> . term DIVIDE factor
-    (27) term -> . factor
-    (28) factor -> . NUMBER
-    (29) factor -> . ID
-    (30) factor -> . LPAREN expression RPAREN
+    (9) instruction -> CAPTURE LPAREN . ID RPAREN END
 
-    NUMBER          shift and go to state 19
-    ID              shift and go to state 20
-    LPAREN          shift and go to state 13
+    ID              shift and go to state 23
 
-    expression                     shift and go to state 22
-    term                           shift and go to state 17
-    factor                         shift and go to state 18
 
 state 12
 
-    (10) instruction -> IF LPAREN . condition RPAREN THEN instructions ENDIF
-    (12) condition -> . expression relop expression
-    (13) condition -> . condition AND condition
-    (14) condition -> . condition OR condition
-    (15) condition -> . NOT condition
-    (22) expression -> . expression PLUS term
-    (23) expression -> . expression MINUS term
-    (24) expression -> . term
-    (25) term -> . term TIMES factor
-    (26) term -> . term DIVIDE factor
-    (27) term -> . factor
-    (28) factor -> . NUMBER
-    (29) factor -> . ID
-    (30) factor -> . LPAREN expression RPAREN
+    (11) instruction -> ID ASSIGN . expression END
+    (18) expression -> . expression PLUS term
+    (19) expression -> . expression MINUS term
+    (20) expression -> . term
+    (21) term -> . term TIMES factor
+    (22) term -> . term DIVIDE factor
+    (23) term -> . factor
+    (24) factor -> . NUMBER
+    (25) factor -> . ID
+    (26) factor -> . LPAREN expression RPAREN
 
-    NOT             shift and go to state 25
-    NUMBER          shift and go to state 19
-    ID              shift and go to state 20
-    LPAREN          shift and go to state 13
+    NUMBER          shift and go to state 21
+    ID              shift and go to state 22
+    LPAREN          shift and go to state 15
 
-    condition                      shift and go to state 23
     expression                     shift and go to state 24
-    term                           shift and go to state 17
-    factor                         shift and go to state 18
+    term                           shift and go to state 19
+    factor                         shift and go to state 20
 
 state 13
 
-    (30) factor -> LPAREN . expression RPAREN
-    (22) expression -> . expression PLUS term
-    (23) expression -> . expression MINUS term
-    (24) expression -> . term
-    (25) term -> . term TIMES factor
-    (26) term -> . term DIVIDE factor
-    (27) term -> . factor
-    (28) factor -> . NUMBER
-    (29) factor -> . ID
-    (30) factor -> . LPAREN expression RPAREN
+    (10) instruction -> IF LPAREN . condition RPAREN THEN instructions ENDIF
+    (28) condition -> . condition AND condition
+    (29) condition -> . condition OR condition
+    (30) condition -> . NOT condition
+    (31) condition -> . LPAREN condition RPAREN
+    (32) condition -> . expression relop expression
+    (18) expression -> . expression PLUS term
+    (19) expression -> . expression MINUS term
+    (20) expression -> . term
+    (21) term -> . term TIMES factor
+    (22) term -> . term DIVIDE factor
+    (23) term -> . factor
+    (24) factor -> . NUMBER
+    (25) factor -> . ID
+    (26) factor -> . LPAREN expression RPAREN
 
-    NUMBER          shift and go to state 19
-    ID              shift and go to state 20
-    LPAREN          shift and go to state 13
+    NOT             shift and go to state 27
+    LPAREN          shift and go to state 25
+    NUMBER          shift and go to state 21
+    ID              shift and go to state 22
 
-    expression                     shift and go to state 26
-    term                           shift and go to state 17
-    factor                         shift and go to state 18
+    condition                      shift and go to state 26
+    expression                     shift and go to state 28
+    term                           shift and go to state 19
+    factor                         shift and go to state 20
 
 state 14
 
-    (4) instruction -> WRITE LPAREN write_args . RPAREN END
+    (27) instruction -> WHILE LPAREN . condition RPAREN instructions ENDWHILE
+    (28) condition -> . condition AND condition
+    (29) condition -> . condition OR condition
+    (30) condition -> . NOT condition
+    (31) condition -> . LPAREN condition RPAREN
+    (32) condition -> . expression relop expression
+    (18) expression -> . expression PLUS term
+    (19) expression -> . expression MINUS term
+    (20) expression -> . term
+    (21) term -> . term TIMES factor
+    (22) term -> . term DIVIDE factor
+    (23) term -> . factor
+    (24) factor -> . NUMBER
+    (25) factor -> . ID
+    (26) factor -> . LPAREN expression RPAREN
 
-    RPAREN          shift and go to state 27
+    NOT             shift and go to state 27
+    LPAREN          shift and go to state 25
+    NUMBER          shift and go to state 21
+    ID              shift and go to state 22
 
+    condition                      shift and go to state 29
+    expression                     shift and go to state 28
+    term                           shift and go to state 19
+    factor                         shift and go to state 20
 
 state 15
 
-    (5) write_args -> expression .
-    (8) write_args -> expression . COMMA expression
-    (22) expression -> expression . PLUS term
-    (23) expression -> expression . MINUS term
+    (26) factor -> LPAREN . expression RPAREN
+    (18) expression -> . expression PLUS term
+    (19) expression -> . expression MINUS term
+    (20) expression -> . term
+    (21) term -> . term TIMES factor
+    (22) term -> . term DIVIDE factor
+    (23) term -> . factor
+    (24) factor -> . NUMBER
+    (25) factor -> . ID
+    (26) factor -> . LPAREN expression RPAREN
 
-    RPAREN          reduce using rule 5 (write_args -> expression .)
-    COMMA           shift and go to state 28
-    PLUS            shift and go to state 29
-    MINUS           shift and go to state 30
+    NUMBER          shift and go to state 21
+    ID              shift and go to state 22
+    LPAREN          shift and go to state 15
 
+    expression                     shift and go to state 30
+    term                           shift and go to state 19
+    factor                         shift and go to state 20
 
 state 16
 
-    (6) write_args -> STRING .
-    (7) write_args -> STRING . COMMA expression
+    (4) instruction -> WRITE LPAREN write_args . RPAREN END
+    (5) write_args -> write_args . COMMA expression
+    (6) write_args -> write_args . COMMA STRING
 
-    RPAREN          reduce using rule 6 (write_args -> STRING .)
-    COMMA           shift and go to state 31
+    RPAREN          shift and go to state 31
+    COMMA           shift and go to state 32
 
 
 state 17
 
-    (24) expression -> term .
-    (25) term -> term . TIMES factor
-    (26) term -> term . DIVIDE factor
+    (7) write_args -> expression .
+    (18) expression -> expression . PLUS term
+    (19) expression -> expression . MINUS term
 
-    COMMA           reduce using rule 24 (expression -> term .)
-    PLUS            reduce using rule 24 (expression -> term .)
-    MINUS           reduce using rule 24 (expression -> term .)
-    RPAREN          reduce using rule 24 (expression -> term .)
-    END             reduce using rule 24 (expression -> term .)
-    LT              reduce using rule 24 (expression -> term .)
-    LE              reduce using rule 24 (expression -> term .)
-    GT              reduce using rule 24 (expression -> term .)
-    GE              reduce using rule 24 (expression -> term .)
-    EQ              reduce using rule 24 (expression -> term .)
-    NE              reduce using rule 24 (expression -> term .)
-    AND             reduce using rule 24 (expression -> term .)
-    OR              reduce using rule 24 (expression -> term .)
-    TIMES           shift and go to state 32
-    DIVIDE          shift and go to state 33
+    RPAREN          reduce using rule 7 (write_args -> expression .)
+    COMMA           reduce using rule 7 (write_args -> expression .)
+    PLUS            shift and go to state 33
+    MINUS           shift and go to state 34
 
 
 state 18
 
-    (27) term -> factor .
+    (8) write_args -> STRING .
 
-    TIMES           reduce using rule 27 (term -> factor .)
-    DIVIDE          reduce using rule 27 (term -> factor .)
-    COMMA           reduce using rule 27 (term -> factor .)
-    PLUS            reduce using rule 27 (term -> factor .)
-    MINUS           reduce using rule 27 (term -> factor .)
-    RPAREN          reduce using rule 27 (term -> factor .)
-    END             reduce using rule 27 (term -> factor .)
-    LT              reduce using rule 27 (term -> factor .)
-    LE              reduce using rule 27 (term -> factor .)
-    GT              reduce using rule 27 (term -> factor .)
-    GE              reduce using rule 27 (term -> factor .)
-    EQ              reduce using rule 27 (term -> factor .)
-    NE              reduce using rule 27 (term -> factor .)
-    AND             reduce using rule 27 (term -> factor .)
-    OR              reduce using rule 27 (term -> factor .)
+    RPAREN          reduce using rule 8 (write_args -> STRING .)
+    COMMA           reduce using rule 8 (write_args -> STRING .)
 
 
 state 19
 
-    (28) factor -> NUMBER .
+    (20) expression -> term .
+    (21) term -> term . TIMES factor
+    (22) term -> term . DIVIDE factor
 
-    TIMES           reduce using rule 28 (factor -> NUMBER .)
-    DIVIDE          reduce using rule 28 (factor -> NUMBER .)
-    COMMA           reduce using rule 28 (factor -> NUMBER .)
-    PLUS            reduce using rule 28 (factor -> NUMBER .)
-    MINUS           reduce using rule 28 (factor -> NUMBER .)
-    RPAREN          reduce using rule 28 (factor -> NUMBER .)
-    END             reduce using rule 28 (factor -> NUMBER .)
-    LT              reduce using rule 28 (factor -> NUMBER .)
-    LE              reduce using rule 28 (factor -> NUMBER .)
-    GT              reduce using rule 28 (factor -> NUMBER .)
-    GE              reduce using rule 28 (factor -> NUMBER .)
-    EQ              reduce using rule 28 (factor -> NUMBER .)
-    NE              reduce using rule 28 (factor -> NUMBER .)
-    AND             reduce using rule 28 (factor -> NUMBER .)
-    OR              reduce using rule 28 (factor -> NUMBER .)
+    PLUS            reduce using rule 20 (expression -> term .)
+    MINUS           reduce using rule 20 (expression -> term .)
+    RPAREN          reduce using rule 20 (expression -> term .)
+    COMMA           reduce using rule 20 (expression -> term .)
+    END             reduce using rule 20 (expression -> term .)
+    LT              reduce using rule 20 (expression -> term .)
+    LE              reduce using rule 20 (expression -> term .)
+    GT              reduce using rule 20 (expression -> term .)
+    GE              reduce using rule 20 (expression -> term .)
+    EQ              reduce using rule 20 (expression -> term .)
+    NE              reduce using rule 20 (expression -> term .)
+    AND             reduce using rule 20 (expression -> term .)
+    OR              reduce using rule 20 (expression -> term .)
+    TIMES           shift and go to state 35
+    DIVIDE          shift and go to state 36
 
 
 state 20
 
-    (29) factor -> ID .
+    (23) term -> factor .
 
-    TIMES           reduce using rule 29 (factor -> ID .)
-    DIVIDE          reduce using rule 29 (factor -> ID .)
-    COMMA           reduce using rule 29 (factor -> ID .)
-    PLUS            reduce using rule 29 (factor -> ID .)
-    MINUS           reduce using rule 29 (factor -> ID .)
-    RPAREN          reduce using rule 29 (factor -> ID .)
-    END             reduce using rule 29 (factor -> ID .)
-    LT              reduce using rule 29 (factor -> ID .)
-    LE              reduce using rule 29 (factor -> ID .)
-    GT              reduce using rule 29 (factor -> ID .)
-    GE              reduce using rule 29 (factor -> ID .)
-    EQ              reduce using rule 29 (factor -> ID .)
-    NE              reduce using rule 29 (factor -> ID .)
-    AND             reduce using rule 29 (factor -> ID .)
-    OR              reduce using rule 29 (factor -> ID .)
+    TIMES           reduce using rule 23 (term -> factor .)
+    DIVIDE          reduce using rule 23 (term -> factor .)
+    PLUS            reduce using rule 23 (term -> factor .)
+    MINUS           reduce using rule 23 (term -> factor .)
+    RPAREN          reduce using rule 23 (term -> factor .)
+    COMMA           reduce using rule 23 (term -> factor .)
+    END             reduce using rule 23 (term -> factor .)
+    LT              reduce using rule 23 (term -> factor .)
+    LE              reduce using rule 23 (term -> factor .)
+    GT              reduce using rule 23 (term -> factor .)
+    GE              reduce using rule 23 (term -> factor .)
+    EQ              reduce using rule 23 (term -> factor .)
+    NE              reduce using rule 23 (term -> factor .)
+    AND             reduce using rule 23 (term -> factor .)
+    OR              reduce using rule 23 (term -> factor .)
 
 
 state 21
 
-    (9) instruction -> CAPTURE LPAREN ID . RPAREN END
+    (24) factor -> NUMBER .
 
-    RPAREN          shift and go to state 34
+    TIMES           reduce using rule 24 (factor -> NUMBER .)
+    DIVIDE          reduce using rule 24 (factor -> NUMBER .)
+    PLUS            reduce using rule 24 (factor -> NUMBER .)
+    MINUS           reduce using rule 24 (factor -> NUMBER .)
+    RPAREN          reduce using rule 24 (factor -> NUMBER .)
+    COMMA           reduce using rule 24 (factor -> NUMBER .)
+    END             reduce using rule 24 (factor -> NUMBER .)
+    LT              reduce using rule 24 (factor -> NUMBER .)
+    LE              reduce using rule 24 (factor -> NUMBER .)
+    GT              reduce using rule 24 (factor -> NUMBER .)
+    GE              reduce using rule 24 (factor -> NUMBER .)
+    EQ              reduce using rule 24 (factor -> NUMBER .)
+    NE              reduce using rule 24 (factor -> NUMBER .)
+    AND             reduce using rule 24 (factor -> NUMBER .)
+    OR              reduce using rule 24 (factor -> NUMBER .)
 
 
 state 22
 
-    (11) instruction -> ID ASSIGN expression . END
-    (22) expression -> expression . PLUS term
-    (23) expression -> expression . MINUS term
+    (25) factor -> ID .
 
-    END             shift and go to state 35
-    PLUS            shift and go to state 29
-    MINUS           shift and go to state 30
+    TIMES           reduce using rule 25 (factor -> ID .)
+    DIVIDE          reduce using rule 25 (factor -> ID .)
+    PLUS            reduce using rule 25 (factor -> ID .)
+    MINUS           reduce using rule 25 (factor -> ID .)
+    RPAREN          reduce using rule 25 (factor -> ID .)
+    COMMA           reduce using rule 25 (factor -> ID .)
+    END             reduce using rule 25 (factor -> ID .)
+    LT              reduce using rule 25 (factor -> ID .)
+    LE              reduce using rule 25 (factor -> ID .)
+    GT              reduce using rule 25 (factor -> ID .)
+    GE              reduce using rule 25 (factor -> ID .)
+    EQ              reduce using rule 25 (factor -> ID .)
+    NE              reduce using rule 25 (factor -> ID .)
+    AND             reduce using rule 25 (factor -> ID .)
+    OR              reduce using rule 25 (factor -> ID .)
 
 
 state 23
 
-    (10) instruction -> IF LPAREN condition . RPAREN THEN instructions ENDIF
-    (13) condition -> condition . AND condition
-    (14) condition -> condition . OR condition
+    (9) instruction -> CAPTURE LPAREN ID . RPAREN END
 
-    RPAREN          shift and go to state 36
-    AND             shift and go to state 37
-    OR              shift and go to state 38
+    RPAREN          shift and go to state 37
 
 
 state 24
 
-    (12) condition -> expression . relop expression
-    (22) expression -> expression . PLUS term
-    (23) expression -> expression . MINUS term
-    (16) relop -> . LT
-    (17) relop -> . LE
-    (18) relop -> . GT
-    (19) relop -> . GE
-    (20) relop -> . EQ
-    (21) relop -> . NE
+    (11) instruction -> ID ASSIGN expression . END
+    (18) expression -> expression . PLUS term
+    (19) expression -> expression . MINUS term
 
-    PLUS            shift and go to state 29
-    MINUS           shift and go to state 30
-    LT              shift and go to state 40
-    LE              shift and go to state 41
-    GT              shift and go to state 42
-    GE              shift and go to state 43
-    EQ              shift and go to state 44
-    NE              shift and go to state 45
+    END             shift and go to state 38
+    PLUS            shift and go to state 33
+    MINUS           shift and go to state 34
 
-    relop                          shift and go to state 39
 
 state 25
 
-    (15) condition -> NOT . condition
-    (12) condition -> . expression relop expression
-    (13) condition -> . condition AND condition
-    (14) condition -> . condition OR condition
-    (15) condition -> . NOT condition
-    (22) expression -> . expression PLUS term
-    (23) expression -> . expression MINUS term
-    (24) expression -> . term
-    (25) term -> . term TIMES factor
-    (26) term -> . term DIVIDE factor
-    (27) term -> . factor
-    (28) factor -> . NUMBER
-    (29) factor -> . ID
-    (30) factor -> . LPAREN expression RPAREN
+    (31) condition -> LPAREN . condition RPAREN
+    (26) factor -> LPAREN . expression RPAREN
+    (28) condition -> . condition AND condition
+    (29) condition -> . condition OR condition
+    (30) condition -> . NOT condition
+    (31) condition -> . LPAREN condition RPAREN
+    (32) condition -> . expression relop expression
+    (18) expression -> . expression PLUS term
+    (19) expression -> . expression MINUS term
+    (20) expression -> . term
+    (21) term -> . term TIMES factor
+    (22) term -> . term DIVIDE factor
+    (23) term -> . factor
+    (24) factor -> . NUMBER
+    (25) factor -> . ID
+    (26) factor -> . LPAREN expression RPAREN
 
-    NOT             shift and go to state 25
-    NUMBER          shift and go to state 19
-    ID              shift and go to state 20
-    LPAREN          shift and go to state 13
+    NOT             shift and go to state 27
+    LPAREN          shift and go to state 25
+    NUMBER          shift and go to state 21
+    ID              shift and go to state 22
 
-    condition                      shift and go to state 46
-    expression                     shift and go to state 24
-    term                           shift and go to state 17
-    factor                         shift and go to state 18
+    condition                      shift and go to state 39
+    expression                     shift and go to state 40
+    term                           shift and go to state 19
+    factor                         shift and go to state 20
 
 state 26
 
-    (30) factor -> LPAREN expression . RPAREN
-    (22) expression -> expression . PLUS term
-    (23) expression -> expression . MINUS term
+    (10) instruction -> IF LPAREN condition . RPAREN THEN instructions ENDIF
+    (28) condition -> condition . AND condition
+    (29) condition -> condition . OR condition
 
-    RPAREN          shift and go to state 47
-    PLUS            shift and go to state 29
-    MINUS           shift and go to state 30
+    RPAREN          shift and go to state 41
+    AND             shift and go to state 42
+    OR              shift and go to state 43
 
 
 state 27
 
-    (4) instruction -> WRITE LPAREN write_args RPAREN . END
+    (30) condition -> NOT . condition
+    (28) condition -> . condition AND condition
+    (29) condition -> . condition OR condition
+    (30) condition -> . NOT condition
+    (31) condition -> . LPAREN condition RPAREN
+    (32) condition -> . expression relop expression
+    (18) expression -> . expression PLUS term
+    (19) expression -> . expression MINUS term
+    (20) expression -> . term
+    (21) term -> . term TIMES factor
+    (22) term -> . term DIVIDE factor
+    (23) term -> . factor
+    (24) factor -> . NUMBER
+    (25) factor -> . ID
+    (26) factor -> . LPAREN expression RPAREN
 
-    END             shift and go to state 48
+    NOT             shift and go to state 27
+    LPAREN          shift and go to state 25
+    NUMBER          shift and go to state 21
+    ID              shift and go to state 22
 
+    condition                      shift and go to state 44
+    expression                     shift and go to state 28
+    term                           shift and go to state 19
+    factor                         shift and go to state 20
 
 state 28
 
-    (8) write_args -> expression COMMA . expression
-    (22) expression -> . expression PLUS term
-    (23) expression -> . expression MINUS term
-    (24) expression -> . term
-    (25) term -> . term TIMES factor
-    (26) term -> . term DIVIDE factor
-    (27) term -> . factor
-    (28) factor -> . NUMBER
-    (29) factor -> . ID
-    (30) factor -> . LPAREN expression RPAREN
+    (32) condition -> expression . relop expression
+    (18) expression -> expression . PLUS term
+    (19) expression -> expression . MINUS term
+    (12) relop -> . LT
+    (13) relop -> . LE
+    (14) relop -> . GT
+    (15) relop -> . GE
+    (16) relop -> . EQ
+    (17) relop -> . NE
 
-    NUMBER          shift and go to state 19
-    ID              shift and go to state 20
-    LPAREN          shift and go to state 13
+    PLUS            shift and go to state 33
+    MINUS           shift and go to state 34
+    LT              shift and go to state 46
+    LE              shift and go to state 47
+    GT              shift and go to state 48
+    GE              shift and go to state 49
+    EQ              shift and go to state 50
+    NE              shift and go to state 51
 
-    expression                     shift and go to state 49
-    term                           shift and go to state 17
-    factor                         shift and go to state 18
+    relop                          shift and go to state 45
 
 state 29
 
-    (22) expression -> expression PLUS . term
-    (25) term -> . term TIMES factor
-    (26) term -> . term DIVIDE factor
-    (27) term -> . factor
-    (28) factor -> . NUMBER
-    (29) factor -> . ID
-    (30) factor -> . LPAREN expression RPAREN
+    (27) instruction -> WHILE LPAREN condition . RPAREN instructions ENDWHILE
+    (28) condition -> condition . AND condition
+    (29) condition -> condition . OR condition
 
-    NUMBER          shift and go to state 19
-    ID              shift and go to state 20
-    LPAREN          shift and go to state 13
+    RPAREN          shift and go to state 52
+    AND             shift and go to state 42
+    OR              shift and go to state 43
 
-    term                           shift and go to state 50
-    factor                         shift and go to state 18
 
 state 30
 
-    (23) expression -> expression MINUS . term
-    (25) term -> . term TIMES factor
-    (26) term -> . term DIVIDE factor
-    (27) term -> . factor
-    (28) factor -> . NUMBER
-    (29) factor -> . ID
-    (30) factor -> . LPAREN expression RPAREN
+    (26) factor -> LPAREN expression . RPAREN
+    (18) expression -> expression . PLUS term
+    (19) expression -> expression . MINUS term
 
-    NUMBER          shift and go to state 19
-    ID              shift and go to state 20
-    LPAREN          shift and go to state 13
+    RPAREN          shift and go to state 53
+    PLUS            shift and go to state 33
+    MINUS           shift and go to state 34
 
-    term                           shift and go to state 51
-    factor                         shift and go to state 18
 
 state 31
 
-    (7) write_args -> STRING COMMA . expression
-    (22) expression -> . expression PLUS term
-    (23) expression -> . expression MINUS term
-    (24) expression -> . term
-    (25) term -> . term TIMES factor
-    (26) term -> . term DIVIDE factor
-    (27) term -> . factor
-    (28) factor -> . NUMBER
-    (29) factor -> . ID
-    (30) factor -> . LPAREN expression RPAREN
+    (4) instruction -> WRITE LPAREN write_args RPAREN . END
 
-    NUMBER          shift and go to state 19
-    ID              shift and go to state 20
-    LPAREN          shift and go to state 13
+    END             shift and go to state 54
 
-    expression                     shift and go to state 52
-    term                           shift and go to state 17
-    factor                         shift and go to state 18
 
 state 32
 
-    (25) term -> term TIMES . factor
-    (28) factor -> . NUMBER
-    (29) factor -> . ID
-    (30) factor -> . LPAREN expression RPAREN
+    (5) write_args -> write_args COMMA . expression
+    (6) write_args -> write_args COMMA . STRING
+    (18) expression -> . expression PLUS term
+    (19) expression -> . expression MINUS term
+    (20) expression -> . term
+    (21) term -> . term TIMES factor
+    (22) term -> . term DIVIDE factor
+    (23) term -> . factor
+    (24) factor -> . NUMBER
+    (25) factor -> . ID
+    (26) factor -> . LPAREN expression RPAREN
 
-    NUMBER          shift and go to state 19
-    ID              shift and go to state 20
-    LPAREN          shift and go to state 13
+    STRING          shift and go to state 56
+    NUMBER          shift and go to state 21
+    ID              shift and go to state 22
+    LPAREN          shift and go to state 15
 
-    factor                         shift and go to state 53
+    expression                     shift and go to state 55
+    term                           shift and go to state 19
+    factor                         shift and go to state 20
 
 state 33
 
-    (26) term -> term DIVIDE . factor
-    (28) factor -> . NUMBER
-    (29) factor -> . ID
-    (30) factor -> . LPAREN expression RPAREN
+    (18) expression -> expression PLUS . term
+    (21) term -> . term TIMES factor
+    (22) term -> . term DIVIDE factor
+    (23) term -> . factor
+    (24) factor -> . NUMBER
+    (25) factor -> . ID
+    (26) factor -> . LPAREN expression RPAREN
 
-    NUMBER          shift and go to state 19
-    ID              shift and go to state 20
-    LPAREN          shift and go to state 13
+    NUMBER          shift and go to state 21
+    ID              shift and go to state 22
+    LPAREN          shift and go to state 15
 
-    factor                         shift and go to state 54
+    term                           shift and go to state 57
+    factor                         shift and go to state 20
 
 state 34
 
-    (9) instruction -> CAPTURE LPAREN ID RPAREN . END
+    (19) expression -> expression MINUS . term
+    (21) term -> . term TIMES factor
+    (22) term -> . term DIVIDE factor
+    (23) term -> . factor
+    (24) factor -> . NUMBER
+    (25) factor -> . ID
+    (26) factor -> . LPAREN expression RPAREN
 
-    END             shift and go to state 55
+    NUMBER          shift and go to state 21
+    ID              shift and go to state 22
+    LPAREN          shift and go to state 15
 
+    term                           shift and go to state 58
+    factor                         shift and go to state 20
 
 state 35
+
+    (21) term -> term TIMES . factor
+    (24) factor -> . NUMBER
+    (25) factor -> . ID
+    (26) factor -> . LPAREN expression RPAREN
+
+    NUMBER          shift and go to state 21
+    ID              shift and go to state 22
+    LPAREN          shift and go to state 15
+
+    factor                         shift and go to state 59
+
+state 36
+
+    (22) term -> term DIVIDE . factor
+    (24) factor -> . NUMBER
+    (25) factor -> . ID
+    (26) factor -> . LPAREN expression RPAREN
+
+    NUMBER          shift and go to state 21
+    ID              shift and go to state 22
+    LPAREN          shift and go to state 15
+
+    factor                         shift and go to state 60
+
+state 37
+
+    (9) instruction -> CAPTURE LPAREN ID RPAREN . END
+
+    END             shift and go to state 61
+
+
+state 38
 
     (11) instruction -> ID ASSIGN expression END .
 
@@ -600,182 +669,242 @@ state 35
     CAPTURE         reduce using rule 11 (instruction -> ID ASSIGN expression END .)
     IF              reduce using rule 11 (instruction -> ID ASSIGN expression END .)
     ID              reduce using rule 11 (instruction -> ID ASSIGN expression END .)
+    WHILE           reduce using rule 11 (instruction -> ID ASSIGN expression END .)
     $end            reduce using rule 11 (instruction -> ID ASSIGN expression END .)
+    ENDWHILE        reduce using rule 11 (instruction -> ID ASSIGN expression END .)
     ENDIF           reduce using rule 11 (instruction -> ID ASSIGN expression END .)
 
 
-state 36
-
-    (10) instruction -> IF LPAREN condition RPAREN . THEN instructions ENDIF
-
-    THEN            shift and go to state 56
-
-
-state 37
-
-    (13) condition -> condition AND . condition
-    (12) condition -> . expression relop expression
-    (13) condition -> . condition AND condition
-    (14) condition -> . condition OR condition
-    (15) condition -> . NOT condition
-    (22) expression -> . expression PLUS term
-    (23) expression -> . expression MINUS term
-    (24) expression -> . term
-    (25) term -> . term TIMES factor
-    (26) term -> . term DIVIDE factor
-    (27) term -> . factor
-    (28) factor -> . NUMBER
-    (29) factor -> . ID
-    (30) factor -> . LPAREN expression RPAREN
-
-    NOT             shift and go to state 25
-    NUMBER          shift and go to state 19
-    ID              shift and go to state 20
-    LPAREN          shift and go to state 13
-
-    condition                      shift and go to state 57
-    expression                     shift and go to state 24
-    term                           shift and go to state 17
-    factor                         shift and go to state 18
-
-state 38
-
-    (14) condition -> condition OR . condition
-    (12) condition -> . expression relop expression
-    (13) condition -> . condition AND condition
-    (14) condition -> . condition OR condition
-    (15) condition -> . NOT condition
-    (22) expression -> . expression PLUS term
-    (23) expression -> . expression MINUS term
-    (24) expression -> . term
-    (25) term -> . term TIMES factor
-    (26) term -> . term DIVIDE factor
-    (27) term -> . factor
-    (28) factor -> . NUMBER
-    (29) factor -> . ID
-    (30) factor -> . LPAREN expression RPAREN
-
-    NOT             shift and go to state 25
-    NUMBER          shift and go to state 19
-    ID              shift and go to state 20
-    LPAREN          shift and go to state 13
-
-    condition                      shift and go to state 58
-    expression                     shift and go to state 24
-    term                           shift and go to state 17
-    factor                         shift and go to state 18
-
 state 39
 
-    (12) condition -> expression relop . expression
-    (22) expression -> . expression PLUS term
-    (23) expression -> . expression MINUS term
-    (24) expression -> . term
-    (25) term -> . term TIMES factor
-    (26) term -> . term DIVIDE factor
-    (27) term -> . factor
-    (28) factor -> . NUMBER
-    (29) factor -> . ID
-    (30) factor -> . LPAREN expression RPAREN
+    (31) condition -> LPAREN condition . RPAREN
+    (28) condition -> condition . AND condition
+    (29) condition -> condition . OR condition
 
-    NUMBER          shift and go to state 19
-    ID              shift and go to state 20
-    LPAREN          shift and go to state 13
+    RPAREN          shift and go to state 62
+    AND             shift and go to state 42
+    OR              shift and go to state 43
 
-    expression                     shift and go to state 59
-    term                           shift and go to state 17
-    factor                         shift and go to state 18
 
 state 40
 
-    (16) relop -> LT .
+    (26) factor -> LPAREN expression . RPAREN
+    (32) condition -> expression . relop expression
+    (18) expression -> expression . PLUS term
+    (19) expression -> expression . MINUS term
+    (12) relop -> . LT
+    (13) relop -> . LE
+    (14) relop -> . GT
+    (15) relop -> . GE
+    (16) relop -> . EQ
+    (17) relop -> . NE
 
-    NUMBER          reduce using rule 16 (relop -> LT .)
-    ID              reduce using rule 16 (relop -> LT .)
-    LPAREN          reduce using rule 16 (relop -> LT .)
+    RPAREN          shift and go to state 53
+    PLUS            shift and go to state 33
+    MINUS           shift and go to state 34
+    LT              shift and go to state 46
+    LE              shift and go to state 47
+    GT              shift and go to state 48
+    GE              shift and go to state 49
+    EQ              shift and go to state 50
+    NE              shift and go to state 51
 
+    relop                          shift and go to state 45
 
 state 41
 
-    (17) relop -> LE .
+    (10) instruction -> IF LPAREN condition RPAREN . THEN instructions ENDIF
 
-    NUMBER          reduce using rule 17 (relop -> LE .)
-    ID              reduce using rule 17 (relop -> LE .)
-    LPAREN          reduce using rule 17 (relop -> LE .)
+    THEN            shift and go to state 63
 
 
 state 42
 
-    (18) relop -> GT .
+    (28) condition -> condition AND . condition
+    (28) condition -> . condition AND condition
+    (29) condition -> . condition OR condition
+    (30) condition -> . NOT condition
+    (31) condition -> . LPAREN condition RPAREN
+    (32) condition -> . expression relop expression
+    (18) expression -> . expression PLUS term
+    (19) expression -> . expression MINUS term
+    (20) expression -> . term
+    (21) term -> . term TIMES factor
+    (22) term -> . term DIVIDE factor
+    (23) term -> . factor
+    (24) factor -> . NUMBER
+    (25) factor -> . ID
+    (26) factor -> . LPAREN expression RPAREN
 
-    NUMBER          reduce using rule 18 (relop -> GT .)
-    ID              reduce using rule 18 (relop -> GT .)
-    LPAREN          reduce using rule 18 (relop -> GT .)
+    NOT             shift and go to state 27
+    LPAREN          shift and go to state 25
+    NUMBER          shift and go to state 21
+    ID              shift and go to state 22
 
+    condition                      shift and go to state 64
+    expression                     shift and go to state 28
+    term                           shift and go to state 19
+    factor                         shift and go to state 20
 
 state 43
 
-    (19) relop -> GE .
+    (29) condition -> condition OR . condition
+    (28) condition -> . condition AND condition
+    (29) condition -> . condition OR condition
+    (30) condition -> . NOT condition
+    (31) condition -> . LPAREN condition RPAREN
+    (32) condition -> . expression relop expression
+    (18) expression -> . expression PLUS term
+    (19) expression -> . expression MINUS term
+    (20) expression -> . term
+    (21) term -> . term TIMES factor
+    (22) term -> . term DIVIDE factor
+    (23) term -> . factor
+    (24) factor -> . NUMBER
+    (25) factor -> . ID
+    (26) factor -> . LPAREN expression RPAREN
 
-    NUMBER          reduce using rule 19 (relop -> GE .)
-    ID              reduce using rule 19 (relop -> GE .)
-    LPAREN          reduce using rule 19 (relop -> GE .)
+    NOT             shift and go to state 27
+    LPAREN          shift and go to state 25
+    NUMBER          shift and go to state 21
+    ID              shift and go to state 22
 
+    condition                      shift and go to state 65
+    expression                     shift and go to state 28
+    term                           shift and go to state 19
+    factor                         shift and go to state 20
 
 state 44
 
-    (20) relop -> EQ .
+    (30) condition -> NOT condition .
+    (28) condition -> condition . AND condition
+    (29) condition -> condition . OR condition
 
-    NUMBER          reduce using rule 20 (relop -> EQ .)
-    ID              reduce using rule 20 (relop -> EQ .)
-    LPAREN          reduce using rule 20 (relop -> EQ .)
+    RPAREN          reduce using rule 30 (condition -> NOT condition .)
+    AND             reduce using rule 30 (condition -> NOT condition .)
+    OR              reduce using rule 30 (condition -> NOT condition .)
+
+  ! AND             [ shift and go to state 42 ]
+  ! OR              [ shift and go to state 43 ]
 
 
 state 45
 
-    (21) relop -> NE .
+    (32) condition -> expression relop . expression
+    (18) expression -> . expression PLUS term
+    (19) expression -> . expression MINUS term
+    (20) expression -> . term
+    (21) term -> . term TIMES factor
+    (22) term -> . term DIVIDE factor
+    (23) term -> . factor
+    (24) factor -> . NUMBER
+    (25) factor -> . ID
+    (26) factor -> . LPAREN expression RPAREN
 
-    NUMBER          reduce using rule 21 (relop -> NE .)
-    ID              reduce using rule 21 (relop -> NE .)
-    LPAREN          reduce using rule 21 (relop -> NE .)
+    NUMBER          shift and go to state 21
+    ID              shift and go to state 22
+    LPAREN          shift and go to state 15
 
+    expression                     shift and go to state 66
+    term                           shift and go to state 19
+    factor                         shift and go to state 20
 
 state 46
 
-    (15) condition -> NOT condition .
-    (13) condition -> condition . AND condition
-    (14) condition -> condition . OR condition
+    (12) relop -> LT .
 
-    RPAREN          reduce using rule 15 (condition -> NOT condition .)
-    AND             reduce using rule 15 (condition -> NOT condition .)
-    OR              reduce using rule 15 (condition -> NOT condition .)
-
-  ! AND             [ shift and go to state 37 ]
-  ! OR              [ shift and go to state 38 ]
+    NUMBER          reduce using rule 12 (relop -> LT .)
+    ID              reduce using rule 12 (relop -> LT .)
+    LPAREN          reduce using rule 12 (relop -> LT .)
 
 
 state 47
 
-    (30) factor -> LPAREN expression RPAREN .
+    (13) relop -> LE .
 
-    TIMES           reduce using rule 30 (factor -> LPAREN expression RPAREN .)
-    DIVIDE          reduce using rule 30 (factor -> LPAREN expression RPAREN .)
-    COMMA           reduce using rule 30 (factor -> LPAREN expression RPAREN .)
-    PLUS            reduce using rule 30 (factor -> LPAREN expression RPAREN .)
-    MINUS           reduce using rule 30 (factor -> LPAREN expression RPAREN .)
-    RPAREN          reduce using rule 30 (factor -> LPAREN expression RPAREN .)
-    END             reduce using rule 30 (factor -> LPAREN expression RPAREN .)
-    LT              reduce using rule 30 (factor -> LPAREN expression RPAREN .)
-    LE              reduce using rule 30 (factor -> LPAREN expression RPAREN .)
-    GT              reduce using rule 30 (factor -> LPAREN expression RPAREN .)
-    GE              reduce using rule 30 (factor -> LPAREN expression RPAREN .)
-    EQ              reduce using rule 30 (factor -> LPAREN expression RPAREN .)
-    NE              reduce using rule 30 (factor -> LPAREN expression RPAREN .)
-    AND             reduce using rule 30 (factor -> LPAREN expression RPAREN .)
-    OR              reduce using rule 30 (factor -> LPAREN expression RPAREN .)
+    NUMBER          reduce using rule 13 (relop -> LE .)
+    ID              reduce using rule 13 (relop -> LE .)
+    LPAREN          reduce using rule 13 (relop -> LE .)
 
 
 state 48
+
+    (14) relop -> GT .
+
+    NUMBER          reduce using rule 14 (relop -> GT .)
+    ID              reduce using rule 14 (relop -> GT .)
+    LPAREN          reduce using rule 14 (relop -> GT .)
+
+
+state 49
+
+    (15) relop -> GE .
+
+    NUMBER          reduce using rule 15 (relop -> GE .)
+    ID              reduce using rule 15 (relop -> GE .)
+    LPAREN          reduce using rule 15 (relop -> GE .)
+
+
+state 50
+
+    (16) relop -> EQ .
+
+    NUMBER          reduce using rule 16 (relop -> EQ .)
+    ID              reduce using rule 16 (relop -> EQ .)
+    LPAREN          reduce using rule 16 (relop -> EQ .)
+
+
+state 51
+
+    (17) relop -> NE .
+
+    NUMBER          reduce using rule 17 (relop -> NE .)
+    ID              reduce using rule 17 (relop -> NE .)
+    LPAREN          reduce using rule 17 (relop -> NE .)
+
+
+state 52
+
+    (27) instruction -> WHILE LPAREN condition RPAREN . instructions ENDWHILE
+    (2) instructions -> . instruction instructions
+    (3) instructions -> . instruction
+    (4) instruction -> . WRITE LPAREN write_args RPAREN END
+    (9) instruction -> . CAPTURE LPAREN ID RPAREN END
+    (10) instruction -> . IF LPAREN condition RPAREN THEN instructions ENDIF
+    (11) instruction -> . ID ASSIGN expression END
+    (27) instruction -> . WHILE LPAREN condition RPAREN instructions ENDWHILE
+
+    WRITE           shift and go to state 4
+    CAPTURE         shift and go to state 5
+    IF              shift and go to state 7
+    ID              shift and go to state 6
+    WHILE           shift and go to state 8
+
+    instructions                   shift and go to state 67
+    instruction                    shift and go to state 3
+
+state 53
+
+    (26) factor -> LPAREN expression RPAREN .
+
+    TIMES           reduce using rule 26 (factor -> LPAREN expression RPAREN .)
+    DIVIDE          reduce using rule 26 (factor -> LPAREN expression RPAREN .)
+    PLUS            reduce using rule 26 (factor -> LPAREN expression RPAREN .)
+    MINUS           reduce using rule 26 (factor -> LPAREN expression RPAREN .)
+    RPAREN          reduce using rule 26 (factor -> LPAREN expression RPAREN .)
+    COMMA           reduce using rule 26 (factor -> LPAREN expression RPAREN .)
+    END             reduce using rule 26 (factor -> LPAREN expression RPAREN .)
+    LT              reduce using rule 26 (factor -> LPAREN expression RPAREN .)
+    LE              reduce using rule 26 (factor -> LPAREN expression RPAREN .)
+    GT              reduce using rule 26 (factor -> LPAREN expression RPAREN .)
+    GE              reduce using rule 26 (factor -> LPAREN expression RPAREN .)
+    EQ              reduce using rule 26 (factor -> LPAREN expression RPAREN .)
+    NE              reduce using rule 26 (factor -> LPAREN expression RPAREN .)
+    AND             reduce using rule 26 (factor -> LPAREN expression RPAREN .)
+    OR              reduce using rule 26 (factor -> LPAREN expression RPAREN .)
+
+
+state 54
 
     (4) instruction -> WRITE LPAREN write_args RPAREN END .
 
@@ -783,121 +912,121 @@ state 48
     CAPTURE         reduce using rule 4 (instruction -> WRITE LPAREN write_args RPAREN END .)
     IF              reduce using rule 4 (instruction -> WRITE LPAREN write_args RPAREN END .)
     ID              reduce using rule 4 (instruction -> WRITE LPAREN write_args RPAREN END .)
+    WHILE           reduce using rule 4 (instruction -> WRITE LPAREN write_args RPAREN END .)
     $end            reduce using rule 4 (instruction -> WRITE LPAREN write_args RPAREN END .)
+    ENDWHILE        reduce using rule 4 (instruction -> WRITE LPAREN write_args RPAREN END .)
     ENDIF           reduce using rule 4 (instruction -> WRITE LPAREN write_args RPAREN END .)
 
 
-state 49
-
-    (8) write_args -> expression COMMA expression .
-    (22) expression -> expression . PLUS term
-    (23) expression -> expression . MINUS term
-
-    RPAREN          reduce using rule 8 (write_args -> expression COMMA expression .)
-    PLUS            shift and go to state 29
-    MINUS           shift and go to state 30
-
-
-state 50
-
-    (22) expression -> expression PLUS term .
-    (25) term -> term . TIMES factor
-    (26) term -> term . DIVIDE factor
-
-    COMMA           reduce using rule 22 (expression -> expression PLUS term .)
-    PLUS            reduce using rule 22 (expression -> expression PLUS term .)
-    MINUS           reduce using rule 22 (expression -> expression PLUS term .)
-    RPAREN          reduce using rule 22 (expression -> expression PLUS term .)
-    END             reduce using rule 22 (expression -> expression PLUS term .)
-    LT              reduce using rule 22 (expression -> expression PLUS term .)
-    LE              reduce using rule 22 (expression -> expression PLUS term .)
-    GT              reduce using rule 22 (expression -> expression PLUS term .)
-    GE              reduce using rule 22 (expression -> expression PLUS term .)
-    EQ              reduce using rule 22 (expression -> expression PLUS term .)
-    NE              reduce using rule 22 (expression -> expression PLUS term .)
-    AND             reduce using rule 22 (expression -> expression PLUS term .)
-    OR              reduce using rule 22 (expression -> expression PLUS term .)
-    TIMES           shift and go to state 32
-    DIVIDE          shift and go to state 33
-
-
-state 51
-
-    (23) expression -> expression MINUS term .
-    (25) term -> term . TIMES factor
-    (26) term -> term . DIVIDE factor
-
-    COMMA           reduce using rule 23 (expression -> expression MINUS term .)
-    PLUS            reduce using rule 23 (expression -> expression MINUS term .)
-    MINUS           reduce using rule 23 (expression -> expression MINUS term .)
-    RPAREN          reduce using rule 23 (expression -> expression MINUS term .)
-    END             reduce using rule 23 (expression -> expression MINUS term .)
-    LT              reduce using rule 23 (expression -> expression MINUS term .)
-    LE              reduce using rule 23 (expression -> expression MINUS term .)
-    GT              reduce using rule 23 (expression -> expression MINUS term .)
-    GE              reduce using rule 23 (expression -> expression MINUS term .)
-    EQ              reduce using rule 23 (expression -> expression MINUS term .)
-    NE              reduce using rule 23 (expression -> expression MINUS term .)
-    AND             reduce using rule 23 (expression -> expression MINUS term .)
-    OR              reduce using rule 23 (expression -> expression MINUS term .)
-    TIMES           shift and go to state 32
-    DIVIDE          shift and go to state 33
-
-
-state 52
-
-    (7) write_args -> STRING COMMA expression .
-    (22) expression -> expression . PLUS term
-    (23) expression -> expression . MINUS term
-
-    RPAREN          reduce using rule 7 (write_args -> STRING COMMA expression .)
-    PLUS            shift and go to state 29
-    MINUS           shift and go to state 30
-
-
-state 53
-
-    (25) term -> term TIMES factor .
-
-    TIMES           reduce using rule 25 (term -> term TIMES factor .)
-    DIVIDE          reduce using rule 25 (term -> term TIMES factor .)
-    COMMA           reduce using rule 25 (term -> term TIMES factor .)
-    PLUS            reduce using rule 25 (term -> term TIMES factor .)
-    MINUS           reduce using rule 25 (term -> term TIMES factor .)
-    RPAREN          reduce using rule 25 (term -> term TIMES factor .)
-    END             reduce using rule 25 (term -> term TIMES factor .)
-    LT              reduce using rule 25 (term -> term TIMES factor .)
-    LE              reduce using rule 25 (term -> term TIMES factor .)
-    GT              reduce using rule 25 (term -> term TIMES factor .)
-    GE              reduce using rule 25 (term -> term TIMES factor .)
-    EQ              reduce using rule 25 (term -> term TIMES factor .)
-    NE              reduce using rule 25 (term -> term TIMES factor .)
-    AND             reduce using rule 25 (term -> term TIMES factor .)
-    OR              reduce using rule 25 (term -> term TIMES factor .)
-
-
-state 54
-
-    (26) term -> term DIVIDE factor .
-
-    TIMES           reduce using rule 26 (term -> term DIVIDE factor .)
-    DIVIDE          reduce using rule 26 (term -> term DIVIDE factor .)
-    COMMA           reduce using rule 26 (term -> term DIVIDE factor .)
-    PLUS            reduce using rule 26 (term -> term DIVIDE factor .)
-    MINUS           reduce using rule 26 (term -> term DIVIDE factor .)
-    RPAREN          reduce using rule 26 (term -> term DIVIDE factor .)
-    END             reduce using rule 26 (term -> term DIVIDE factor .)
-    LT              reduce using rule 26 (term -> term DIVIDE factor .)
-    LE              reduce using rule 26 (term -> term DIVIDE factor .)
-    GT              reduce using rule 26 (term -> term DIVIDE factor .)
-    GE              reduce using rule 26 (term -> term DIVIDE factor .)
-    EQ              reduce using rule 26 (term -> term DIVIDE factor .)
-    NE              reduce using rule 26 (term -> term DIVIDE factor .)
-    AND             reduce using rule 26 (term -> term DIVIDE factor .)
-    OR              reduce using rule 26 (term -> term DIVIDE factor .)
-
-
 state 55
+
+    (5) write_args -> write_args COMMA expression .
+    (18) expression -> expression . PLUS term
+    (19) expression -> expression . MINUS term
+
+    RPAREN          reduce using rule 5 (write_args -> write_args COMMA expression .)
+    COMMA           reduce using rule 5 (write_args -> write_args COMMA expression .)
+    PLUS            shift and go to state 33
+    MINUS           shift and go to state 34
+
+
+state 56
+
+    (6) write_args -> write_args COMMA STRING .
+
+    RPAREN          reduce using rule 6 (write_args -> write_args COMMA STRING .)
+    COMMA           reduce using rule 6 (write_args -> write_args COMMA STRING .)
+
+
+state 57
+
+    (18) expression -> expression PLUS term .
+    (21) term -> term . TIMES factor
+    (22) term -> term . DIVIDE factor
+
+    PLUS            reduce using rule 18 (expression -> expression PLUS term .)
+    MINUS           reduce using rule 18 (expression -> expression PLUS term .)
+    RPAREN          reduce using rule 18 (expression -> expression PLUS term .)
+    COMMA           reduce using rule 18 (expression -> expression PLUS term .)
+    END             reduce using rule 18 (expression -> expression PLUS term .)
+    LT              reduce using rule 18 (expression -> expression PLUS term .)
+    LE              reduce using rule 18 (expression -> expression PLUS term .)
+    GT              reduce using rule 18 (expression -> expression PLUS term .)
+    GE              reduce using rule 18 (expression -> expression PLUS term .)
+    EQ              reduce using rule 18 (expression -> expression PLUS term .)
+    NE              reduce using rule 18 (expression -> expression PLUS term .)
+    AND             reduce using rule 18 (expression -> expression PLUS term .)
+    OR              reduce using rule 18 (expression -> expression PLUS term .)
+    TIMES           shift and go to state 35
+    DIVIDE          shift and go to state 36
+
+
+state 58
+
+    (19) expression -> expression MINUS term .
+    (21) term -> term . TIMES factor
+    (22) term -> term . DIVIDE factor
+
+    PLUS            reduce using rule 19 (expression -> expression MINUS term .)
+    MINUS           reduce using rule 19 (expression -> expression MINUS term .)
+    RPAREN          reduce using rule 19 (expression -> expression MINUS term .)
+    COMMA           reduce using rule 19 (expression -> expression MINUS term .)
+    END             reduce using rule 19 (expression -> expression MINUS term .)
+    LT              reduce using rule 19 (expression -> expression MINUS term .)
+    LE              reduce using rule 19 (expression -> expression MINUS term .)
+    GT              reduce using rule 19 (expression -> expression MINUS term .)
+    GE              reduce using rule 19 (expression -> expression MINUS term .)
+    EQ              reduce using rule 19 (expression -> expression MINUS term .)
+    NE              reduce using rule 19 (expression -> expression MINUS term .)
+    AND             reduce using rule 19 (expression -> expression MINUS term .)
+    OR              reduce using rule 19 (expression -> expression MINUS term .)
+    TIMES           shift and go to state 35
+    DIVIDE          shift and go to state 36
+
+
+state 59
+
+    (21) term -> term TIMES factor .
+
+    TIMES           reduce using rule 21 (term -> term TIMES factor .)
+    DIVIDE          reduce using rule 21 (term -> term TIMES factor .)
+    PLUS            reduce using rule 21 (term -> term TIMES factor .)
+    MINUS           reduce using rule 21 (term -> term TIMES factor .)
+    RPAREN          reduce using rule 21 (term -> term TIMES factor .)
+    COMMA           reduce using rule 21 (term -> term TIMES factor .)
+    END             reduce using rule 21 (term -> term TIMES factor .)
+    LT              reduce using rule 21 (term -> term TIMES factor .)
+    LE              reduce using rule 21 (term -> term TIMES factor .)
+    GT              reduce using rule 21 (term -> term TIMES factor .)
+    GE              reduce using rule 21 (term -> term TIMES factor .)
+    EQ              reduce using rule 21 (term -> term TIMES factor .)
+    NE              reduce using rule 21 (term -> term TIMES factor .)
+    AND             reduce using rule 21 (term -> term TIMES factor .)
+    OR              reduce using rule 21 (term -> term TIMES factor .)
+
+
+state 60
+
+    (22) term -> term DIVIDE factor .
+
+    TIMES           reduce using rule 22 (term -> term DIVIDE factor .)
+    DIVIDE          reduce using rule 22 (term -> term DIVIDE factor .)
+    PLUS            reduce using rule 22 (term -> term DIVIDE factor .)
+    MINUS           reduce using rule 22 (term -> term DIVIDE factor .)
+    RPAREN          reduce using rule 22 (term -> term DIVIDE factor .)
+    COMMA           reduce using rule 22 (term -> term DIVIDE factor .)
+    END             reduce using rule 22 (term -> term DIVIDE factor .)
+    LT              reduce using rule 22 (term -> term DIVIDE factor .)
+    LE              reduce using rule 22 (term -> term DIVIDE factor .)
+    GT              reduce using rule 22 (term -> term DIVIDE factor .)
+    GE              reduce using rule 22 (term -> term DIVIDE factor .)
+    EQ              reduce using rule 22 (term -> term DIVIDE factor .)
+    NE              reduce using rule 22 (term -> term DIVIDE factor .)
+    AND             reduce using rule 22 (term -> term DIVIDE factor .)
+    OR              reduce using rule 22 (term -> term DIVIDE factor .)
+
+
+state 61
 
     (9) instruction -> CAPTURE LPAREN ID RPAREN END .
 
@@ -905,11 +1034,22 @@ state 55
     CAPTURE         reduce using rule 9 (instruction -> CAPTURE LPAREN ID RPAREN END .)
     IF              reduce using rule 9 (instruction -> CAPTURE LPAREN ID RPAREN END .)
     ID              reduce using rule 9 (instruction -> CAPTURE LPAREN ID RPAREN END .)
+    WHILE           reduce using rule 9 (instruction -> CAPTURE LPAREN ID RPAREN END .)
     $end            reduce using rule 9 (instruction -> CAPTURE LPAREN ID RPAREN END .)
+    ENDWHILE        reduce using rule 9 (instruction -> CAPTURE LPAREN ID RPAREN END .)
     ENDIF           reduce using rule 9 (instruction -> CAPTURE LPAREN ID RPAREN END .)
 
 
-state 56
+state 62
+
+    (31) condition -> LPAREN condition RPAREN .
+
+    RPAREN          reduce using rule 31 (condition -> LPAREN condition RPAREN .)
+    AND             reduce using rule 31 (condition -> LPAREN condition RPAREN .)
+    OR              reduce using rule 31 (condition -> LPAREN condition RPAREN .)
+
+
+state 63
 
     (10) instruction -> IF LPAREN condition RPAREN THEN . instructions ENDIF
     (2) instructions -> . instruction instructions
@@ -918,64 +1058,87 @@ state 56
     (9) instruction -> . CAPTURE LPAREN ID RPAREN END
     (10) instruction -> . IF LPAREN condition RPAREN THEN instructions ENDIF
     (11) instruction -> . ID ASSIGN expression END
+    (27) instruction -> . WHILE LPAREN condition RPAREN instructions ENDWHILE
 
     WRITE           shift and go to state 4
     CAPTURE         shift and go to state 5
     IF              shift and go to state 7
     ID              shift and go to state 6
+    WHILE           shift and go to state 8
 
-    instructions                   shift and go to state 60
+    instructions                   shift and go to state 68
     instruction                    shift and go to state 3
 
-state 57
+state 64
 
-    (13) condition -> condition AND condition .
-    (13) condition -> condition . AND condition
-    (14) condition -> condition . OR condition
+    (28) condition -> condition AND condition .
+    (28) condition -> condition . AND condition
+    (29) condition -> condition . OR condition
 
-    RPAREN          reduce using rule 13 (condition -> condition AND condition .)
-    AND             reduce using rule 13 (condition -> condition AND condition .)
-    OR              reduce using rule 13 (condition -> condition AND condition .)
+    RPAREN          reduce using rule 28 (condition -> condition AND condition .)
+    AND             reduce using rule 28 (condition -> condition AND condition .)
+    OR              reduce using rule 28 (condition -> condition AND condition .)
 
-  ! AND             [ shift and go to state 37 ]
-  ! OR              [ shift and go to state 38 ]
-
-
-state 58
-
-    (14) condition -> condition OR condition .
-    (13) condition -> condition . AND condition
-    (14) condition -> condition . OR condition
-
-    RPAREN          reduce using rule 14 (condition -> condition OR condition .)
-    OR              reduce using rule 14 (condition -> condition OR condition .)
-    AND             shift and go to state 37
-
-  ! AND             [ reduce using rule 14 (condition -> condition OR condition .) ]
-  ! OR              [ shift and go to state 38 ]
+  ! AND             [ shift and go to state 42 ]
+  ! OR              [ shift and go to state 43 ]
 
 
-state 59
+state 65
 
-    (12) condition -> expression relop expression .
-    (22) expression -> expression . PLUS term
-    (23) expression -> expression . MINUS term
+    (29) condition -> condition OR condition .
+    (28) condition -> condition . AND condition
+    (29) condition -> condition . OR condition
 
-    RPAREN          reduce using rule 12 (condition -> expression relop expression .)
-    AND             reduce using rule 12 (condition -> expression relop expression .)
-    OR              reduce using rule 12 (condition -> expression relop expression .)
-    PLUS            shift and go to state 29
-    MINUS           shift and go to state 30
+    RPAREN          reduce using rule 29 (condition -> condition OR condition .)
+    OR              reduce using rule 29 (condition -> condition OR condition .)
+    AND             shift and go to state 42
+
+  ! AND             [ reduce using rule 29 (condition -> condition OR condition .) ]
+  ! OR              [ shift and go to state 43 ]
 
 
-state 60
+state 66
+
+    (32) condition -> expression relop expression .
+    (18) expression -> expression . PLUS term
+    (19) expression -> expression . MINUS term
+
+    RPAREN          reduce using rule 32 (condition -> expression relop expression .)
+    AND             reduce using rule 32 (condition -> expression relop expression .)
+    OR              reduce using rule 32 (condition -> expression relop expression .)
+    PLUS            shift and go to state 33
+    MINUS           shift and go to state 34
+
+
+state 67
+
+    (27) instruction -> WHILE LPAREN condition RPAREN instructions . ENDWHILE
+
+    ENDWHILE        shift and go to state 69
+
+
+state 68
 
     (10) instruction -> IF LPAREN condition RPAREN THEN instructions . ENDIF
 
-    ENDIF           shift and go to state 61
+    ENDIF           shift and go to state 70
 
 
-state 61
+state 69
+
+    (27) instruction -> WHILE LPAREN condition RPAREN instructions ENDWHILE .
+
+    WRITE           reduce using rule 27 (instruction -> WHILE LPAREN condition RPAREN instructions ENDWHILE .)
+    CAPTURE         reduce using rule 27 (instruction -> WHILE LPAREN condition RPAREN instructions ENDWHILE .)
+    IF              reduce using rule 27 (instruction -> WHILE LPAREN condition RPAREN instructions ENDWHILE .)
+    ID              reduce using rule 27 (instruction -> WHILE LPAREN condition RPAREN instructions ENDWHILE .)
+    WHILE           reduce using rule 27 (instruction -> WHILE LPAREN condition RPAREN instructions ENDWHILE .)
+    $end            reduce using rule 27 (instruction -> WHILE LPAREN condition RPAREN instructions ENDWHILE .)
+    ENDWHILE        reduce using rule 27 (instruction -> WHILE LPAREN condition RPAREN instructions ENDWHILE .)
+    ENDIF           reduce using rule 27 (instruction -> WHILE LPAREN condition RPAREN instructions ENDWHILE .)
+
+
+state 70
 
     (10) instruction -> IF LPAREN condition RPAREN THEN instructions ENDIF .
 
@@ -983,6 +1146,8 @@ state 61
     CAPTURE         reduce using rule 10 (instruction -> IF LPAREN condition RPAREN THEN instructions ENDIF .)
     IF              reduce using rule 10 (instruction -> IF LPAREN condition RPAREN THEN instructions ENDIF .)
     ID              reduce using rule 10 (instruction -> IF LPAREN condition RPAREN THEN instructions ENDIF .)
+    WHILE           reduce using rule 10 (instruction -> IF LPAREN condition RPAREN THEN instructions ENDIF .)
     $end            reduce using rule 10 (instruction -> IF LPAREN condition RPAREN THEN instructions ENDIF .)
+    ENDWHILE        reduce using rule 10 (instruction -> IF LPAREN condition RPAREN THEN instructions ENDIF .)
     ENDIF           reduce using rule 10 (instruction -> IF LPAREN condition RPAREN THEN instructions ENDIF .)
 

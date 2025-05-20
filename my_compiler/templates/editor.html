@@ -1,60 +1,150 @@
-{% extends 'base.html' %}
-
-{% block content %}
+{% extends "base.html" %}
 {% load static %}
+{% block content %}
+
 <h1>My Compiler</h1>
 
 <!-- Estilos de CodeMirror -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/codemirror.min.css">
-<!-- Add our custom stylesheets -->
-<link rel="stylesheet" href="{% static 'css/main.css' %} ">
-<link rel="stylesheet" href="{% static 'css/code_mirror.css' %} ">
+<link rel="stylesheet" href="{% static 'css/main.css' %}">
+<link rel="stylesheet" href="{% static 'css/code_mirror.css' %}">
 
-<!-- Formulario principal -->
-<form method="POST">
+<!-- Editor -->
+<form id="codeForm" method="POST">
     {% csrf_token %}
     <div class="editor-container">
-        <textarea id="code" name="code" placeholder="Write your code" rows="10" cols="50">{{ code|default_if_none:"" }}</textarea>
+        <textarea id="codeInput" name="code" placeholder="Escribe tu código aquí..." rows="15" cols="80">{{ code|default_if_none:"" }}</textarea>
     </div>
 
     <div class="botones">
-        <button type="submit" formaction="{% url 'compile' %}" class="btn-primary">Compile</button>
-        <button type="submit" formaction="{% url 'tokens' %}" class="btn-secondary">Tokens</button>
+        <!-- Botones con funcionalidad JS -->
+        <button type="button" id="compileButton" class="btn-primary">Compilar</button>
+        <button type="button" id="executeButton" class="btn-secondary">Ejecutar</button>
+
+        <!-- Botones con funcionalidad por URL -->
+        <button type="submit" formaction="{% url 'tokens' %}" class="btn-info">Tokens</button>
+        <button type="submit" formaction="{% url 'save_file' %}" class="btn-success">Guardar en DB</button>
+
         <input type="hidden" name="from_editor" value="true">
-        <button type="submit" formaction="{% url 'save_file' %}" class="btn-success">Save to DB</button>
     </div>
 </form>
 
-<!-- Scripts de CodeMirror -->
+<h3>Resultado:</h3>
+<pre id="output"></pre>
+
+<h3>Estado de Variables:</h3>
+<pre id="variables"></pre>
+
+<!-- Scripts CodeMirror -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/codemirror.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/addon/edit/matchbrackets.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/addon/mode/simple.min.js"></script>
 
-<!-- Modo personalizado: define tu lenguaje -->
 <script>
+    // Modo personalizado para nuestro lenguaje
     CodeMirror.defineSimpleMode("myLang", {
         start: [
-            {regex: /\b(write|capture|if|then|end-if|and|or|not)\b/, token: "keyword"},
+            {regex: /\b(write|capture|if|then|end-if|and|or|not|while|end-while)\b/, token: "keyword"},
             {regex: /::/, token: "def"},
             {regex: /"(?:[^\\]|\\.)*?"/, token: "string"},
             {regex: /[-+]?[0-9]+/, token: "number"},
             {regex: /\/\/.*/, token: "comment"},
         ],
-        meta: {
-            lineComment: "//"
-        }
+        meta: { lineComment: "//" }
     });
 
-    var editor = CodeMirror.fromTextArea(document.getElementById("code"), {
+    // Inicializar editor CodeMirror
+    const editor = CodeMirror.fromTextArea(document.getElementById("codeInput"), {
         lineNumbers: true,
         mode: "myLang",
-        theme: "custom", // Using our custom theme
+        theme: "custom",
         matchBrackets: true,
         indentUnit: 4,
         tabSize: 4,
         lineWrapping: true,
         autoCloseBrackets: true,
-        extraKeys: {"Ctrl-Space": "autocomplete"}
+        extraKeys: { "Ctrl-Space": "autocomplete" }
     });
 </script>
+
+<!-- Scripts de compilación y ejecución -->
+<script>
+    let globalAst = null;
+
+    function getCSRFToken() {
+        return document.querySelector('[name=csrfmiddlewaretoken]').value;
+    }
+
+    document.addEventListener("DOMContentLoaded", function () {
+        document.getElementById("compileButton").addEventListener("click", function () {
+            const code = editor.getValue();
+            fetch('/compile/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'X-CSRFToken': getCSRFToken()
+                },
+                body: new URLSearchParams({ code })
+            })
+            .then(res => res.json())
+            .then(data => {
+                console.log("Respuesta compilación:", data);
+                if (data.success) {
+                    globalAst = data.ast;
+                    document.getElementById("output").textContent = "✅ Compilación exitosa";
+                } else {
+                    document.getElementById("output").textContent = "❌ " + (data.output || "Error desconocido");
+                }
+            })
+            .catch(error => {
+                console.error("Error:", error);
+                document.getElementById("output").textContent = "⚠️ Error en la compilación";
+            });
+        });
+
+        document.getElementById("executeButton").addEventListener("click", function () {
+            if (!globalAst) {
+                alert("⚠️ Primero debes compilar el código");
+                return;
+            }
+
+            const code = editor.getValue();
+            fetch('/execute/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'X-CSRFToken': getCSRFToken()
+                },
+                body: new URLSearchParams({
+                    code,
+                    ast: JSON.stringify(globalAst)
+                })
+            })
+            .then(res => res.json())
+            .then(data => {
+                console.log("Respuesta ejecución:", data);
+                if (data.success) {
+                    document.getElementById("output").textContent = data.output || "✅ Ejecución sin salida";
+
+                    let varsText = '';
+                    if (data.variables && Object.keys(data.variables).length > 0) {
+                        for (const [k, v] of Object.entries(data.variables)) {
+                            varsText += `${k} = ${v}\n`;
+                        }
+                    } else {
+                        varsText = 'No hay variables definidas';
+                    }
+                    document.getElementById("variables").textContent = varsText;
+                } else {
+                    document.getElementById("output").innerHTML = `<span style="color:red">❌ ${data.error || 'Error desconocido'}</span>`;
+                }
+            })
+            .catch(error => {
+                console.error("Error:", error);
+                document.getElementById("output").innerHTML = "<span style='color:red'>⚠️ Error al conectar con el servidor</span>";
+            });
+        });
+    });
+</script>
+
 {% endblock %}

@@ -6,9 +6,9 @@ _tabversion = '3.10'
 
 _lr_method = 'LALR'
 
-_lr_signature = 'leftORleftANDrightNOTnonassocLTLEGTGEEQNEleftPLUSMINUSleftTIMESDIVIDEAND ASSIGN CAPTURE COMMA DIVIDE END ENDIF EQ GE GT ID IF LE LPAREN LT MINUS NE NOT NUMBER OR PLUS RPAREN STRING THEN TIMES WRITEprogram : instructionsinstructions : instruction instructions\n                    | instructioninstruction : WRITE LPAREN write_args RPAREN ENDwrite_args : expression\n                  | STRING\n                  | STRING COMMA expression\n                  | expression COMMA expressioninstruction : CAPTURE LPAREN ID RPAREN ENDinstruction : IF LPAREN condition RPAREN THEN instructions ENDIFinstruction : ID ASSIGN expression ENDcondition : expression relop expression\n                 | condition AND condition\n                 | condition OR condition\n                 | NOT conditionrelop : LT\n             | LE\n             | GT\n             | GE\n             | EQ\n             | NEexpression : expression PLUS term\n                  | expression MINUS termexpression : termterm : term TIMES factor\n            | term DIVIDE factorterm : factorfactor : NUMBER\n              | IDfactor : LPAREN expression RPAREN'
+_lr_signature = 'leftORleftANDrightNOTnonassocLTLEGTGEEQNEleftPLUSMINUSleftTIMESDIVIDEAND ASSIGN CAPTURE COMMA DIVIDE END ENDIF ENDWHILE EQ GE GT ID IF LE LPAREN LT MINUS NE NOT NUMBER OR PLUS RPAREN STRING THEN TIMES WHILE WRITEprogram : instructionsinstructions : instruction instructions\n                   | instructioninstruction : WRITE LPAREN write_args RPAREN ENDwrite_args : write_args COMMA expression\n                 | write_args COMMA STRING\n                 | expression\n                 | STRINGinstruction : CAPTURE LPAREN ID RPAREN ENDinstruction : IF LPAREN condition RPAREN THEN instructions ENDIFinstruction : ID ASSIGN expression ENDrelop : LT\n             | LE\n             | GT\n             | GE\n             | EQ\n             | NEexpression : expression PLUS term\n                 | expression MINUS termexpression : termterm : term TIMES factor\n            | term DIVIDE factorterm : factorfactor : NUMBER\n              | IDfactor : LPAREN expression RPARENinstruction : WHILE LPAREN condition RPAREN instructions ENDWHILEcondition : condition AND condition\n                 | condition OR condition\n                 | NOT condition\n                 | LPAREN condition RPAREN\n                 | expression relop expression'
     
-_lr_action_items = {'WRITE':([0,3,35,48,55,56,61,],[4,4,-11,-4,-9,4,-10,]),'CAPTURE':([0,3,35,48,55,56,61,],[5,5,-11,-4,-9,5,-10,]),'IF':([0,3,35,48,55,56,61,],[7,7,-11,-4,-9,7,-10,]),'ID':([0,3,9,10,11,12,13,25,28,29,30,31,32,33,35,37,38,39,40,41,42,43,44,45,48,55,56,61,],[6,6,20,21,20,20,20,20,20,20,20,20,20,20,-11,20,20,20,-16,-17,-18,-19,-20,-21,-4,-9,6,-10,]),'$end':([1,2,3,8,35,48,55,61,],[0,-1,-3,-2,-11,-4,-9,-10,]),'ENDIF':([3,8,35,48,55,60,61,],[-3,-2,-11,-4,-9,61,-10,]),'LPAREN':([4,5,7,9,11,12,13,25,28,29,30,31,32,33,37,38,39,40,41,42,43,44,45,],[9,10,12,13,13,13,13,13,13,13,13,13,13,13,13,13,13,-16,-17,-18,-19,-20,-21,]),'ASSIGN':([6,],[11,]),'STRING':([9,],[16,]),'NUMBER':([9,11,12,13,25,28,29,30,31,32,33,37,38,39,40,41,42,43,44,45,],[19,19,19,19,19,19,19,19,19,19,19,19,19,19,-16,-17,-18,-19,-20,-21,]),'NOT':([12,25,37,38,],[25,25,25,25,]),'RPAREN':([14,15,16,17,18,19,20,21,23,26,46,47,49,50,51,52,53,54,57,58,59,],[27,-5,-6,-24,-27,-28,-29,34,36,47,-15,-30,-8,-22,-23,-7,-25,-26,-13,-14,-12,]),'COMMA':([15,16,17,18,19,20,47,50,51,53,54,],[28,31,-24,-27,-28,-29,-30,-22,-23,-25,-26,]),'PLUS':([15,17,18,19,20,22,24,26,47,49,50,51,52,53,54,59,],[29,-24,-27,-28,-29,29,29,29,-30,29,-22,-23,29,-25,-26,29,]),'MINUS':([15,17,18,19,20,22,24,26,47,49,50,51,52,53,54,59,],[30,-24,-27,-28,-29,30,30,30,-30,30,-22,-23,30,-25,-26,30,]),'END':([17,18,19,20,22,27,34,47,50,51,53,54,],[-24,-27,-28,-29,35,48,55,-30,-22,-23,-25,-26,]),'LT':([17,18,19,20,24,47,50,51,53,54,],[-24,-27,-28,-29,40,-30,-22,-23,-25,-26,]),'LE':([17,18,19,20,24,47,50,51,53,54,],[-24,-27,-28,-29,41,-30,-22,-23,-25,-26,]),'GT':([17,18,19,20,24,47,50,51,53,54,],[-24,-27,-28,-29,42,-30,-22,-23,-25,-26,]),'GE':([17,18,19,20,24,47,50,51,53,54,],[-24,-27,-28,-29,43,-30,-22,-23,-25,-26,]),'EQ':([17,18,19,20,24,47,50,51,53,54,],[-24,-27,-28,-29,44,-30,-22,-23,-25,-26,]),'NE':([17,18,19,20,24,47,50,51,53,54,],[-24,-27,-28,-29,45,-30,-22,-23,-25,-26,]),'AND':([17,18,19,20,23,46,47,50,51,53,54,57,58,59,],[-24,-27,-28,-29,37,-15,-30,-22,-23,-25,-26,-13,37,-12,]),'OR':([17,18,19,20,23,46,47,50,51,53,54,57,58,59,],[-24,-27,-28,-29,38,-15,-30,-22,-23,-25,-26,-13,-14,-12,]),'TIMES':([17,18,19,20,47,50,51,53,54,],[32,-27,-28,-29,-30,32,32,-25,-26,]),'DIVIDE':([17,18,19,20,47,50,51,53,54,],[33,-27,-28,-29,-30,33,33,-25,-26,]),'THEN':([36,],[56,]),}
+_lr_action_items = {'WRITE':([0,3,38,52,54,61,63,69,70,],[4,4,-11,4,-4,-9,4,-27,-10,]),'CAPTURE':([0,3,38,52,54,61,63,69,70,],[5,5,-11,5,-4,-9,5,-27,-10,]),'IF':([0,3,38,52,54,61,63,69,70,],[7,7,-11,7,-4,-9,7,-27,-10,]),'ID':([0,3,10,11,12,13,14,15,25,27,32,33,34,35,36,38,42,43,45,46,47,48,49,50,51,52,54,61,63,69,70,],[6,6,22,23,22,22,22,22,22,22,22,22,22,22,22,-11,22,22,22,-12,-13,-14,-15,-16,-17,6,-4,-9,6,-27,-10,]),'WHILE':([0,3,38,52,54,61,63,69,70,],[8,8,-11,8,-4,-9,8,-27,-10,]),'$end':([1,2,3,9,38,54,61,69,70,],[0,-1,-3,-2,-11,-4,-9,-27,-10,]),'ENDWHILE':([3,9,38,54,61,67,69,70,],[-3,-2,-11,-4,-9,69,-27,-10,]),'ENDIF':([3,9,38,54,61,68,69,70,],[-3,-2,-11,-4,-9,70,-27,-10,]),'LPAREN':([4,5,7,8,10,12,13,14,15,25,27,32,33,34,35,36,42,43,45,46,47,48,49,50,51,],[10,11,13,14,15,15,25,25,15,25,25,15,15,15,15,15,25,25,15,-12,-13,-14,-15,-16,-17,]),'ASSIGN':([6,],[12,]),'STRING':([10,32,],[18,56,]),'NUMBER':([10,12,13,14,15,25,27,32,33,34,35,36,42,43,45,46,47,48,49,50,51,],[21,21,21,21,21,21,21,21,21,21,21,21,21,21,21,-12,-13,-14,-15,-16,-17,]),'NOT':([13,14,25,27,42,43,],[27,27,27,27,27,27,]),'RPAREN':([16,17,18,19,20,21,22,23,26,29,30,39,40,44,53,55,56,57,58,59,60,62,64,65,66,],[31,-7,-8,-20,-23,-24,-25,37,41,52,53,62,53,-30,-26,-5,-6,-18,-19,-21,-22,-31,-28,-29,-32,]),'COMMA':([16,17,18,19,20,21,22,53,55,56,57,58,59,60,],[32,-7,-8,-20,-23,-24,-25,-26,-5,-6,-18,-19,-21,-22,]),'PLUS':([17,19,20,21,22,24,28,30,40,53,55,57,58,59,60,66,],[33,-20,-23,-24,-25,33,33,33,33,-26,33,-18,-19,-21,-22,33,]),'MINUS':([17,19,20,21,22,24,28,30,40,53,55,57,58,59,60,66,],[34,-20,-23,-24,-25,34,34,34,34,-26,34,-18,-19,-21,-22,34,]),'END':([19,20,21,22,24,31,37,53,57,58,59,60,],[-20,-23,-24,-25,38,54,61,-26,-18,-19,-21,-22,]),'LT':([19,20,21,22,28,40,53,57,58,59,60,],[-20,-23,-24,-25,46,46,-26,-18,-19,-21,-22,]),'LE':([19,20,21,22,28,40,53,57,58,59,60,],[-20,-23,-24,-25,47,47,-26,-18,-19,-21,-22,]),'GT':([19,20,21,22,28,40,53,57,58,59,60,],[-20,-23,-24,-25,48,48,-26,-18,-19,-21,-22,]),'GE':([19,20,21,22,28,40,53,57,58,59,60,],[-20,-23,-24,-25,49,49,-26,-18,-19,-21,-22,]),'EQ':([19,20,21,22,28,40,53,57,58,59,60,],[-20,-23,-24,-25,50,50,-26,-18,-19,-21,-22,]),'NE':([19,20,21,22,28,40,53,57,58,59,60,],[-20,-23,-24,-25,51,51,-26,-18,-19,-21,-22,]),'AND':([19,20,21,22,26,29,39,44,53,57,58,59,60,62,64,65,66,],[-20,-23,-24,-25,42,42,42,-30,-26,-18,-19,-21,-22,-31,-28,42,-32,]),'OR':([19,20,21,22,26,29,39,44,53,57,58,59,60,62,64,65,66,],[-20,-23,-24,-25,43,43,43,-30,-26,-18,-19,-21,-22,-31,-28,-29,-32,]),'TIMES':([19,20,21,22,53,57,58,59,60,],[35,-23,-24,-25,-26,35,35,-21,-22,]),'DIVIDE':([19,20,21,22,53,57,58,59,60,],[36,-23,-24,-25,-26,36,36,-21,-22,]),'THEN':([41,],[63,]),}
 
 _lr_action = {}
 for _k, _v in _lr_action_items.items():
@@ -17,7 +17,7 @@ for _k, _v in _lr_action_items.items():
       _lr_action[_x][_k] = _y
 del _lr_action_items
 
-_lr_goto_items = {'program':([0,],[1,]),'instructions':([0,3,56,],[2,8,60,]),'instruction':([0,3,56,],[3,3,3,]),'write_args':([9,],[14,]),'expression':([9,11,12,13,25,28,31,37,38,39,],[15,22,24,26,24,49,52,24,24,59,]),'term':([9,11,12,13,25,28,29,30,31,37,38,39,],[17,17,17,17,17,17,50,51,17,17,17,17,]),'factor':([9,11,12,13,25,28,29,30,31,32,33,37,38,39,],[18,18,18,18,18,18,18,18,18,53,54,18,18,18,]),'condition':([12,25,37,38,],[23,46,57,58,]),'relop':([24,],[39,]),}
+_lr_goto_items = {'program':([0,],[1,]),'instructions':([0,3,52,63,],[2,9,67,68,]),'instruction':([0,3,52,63,],[3,3,3,3,]),'write_args':([10,],[16,]),'expression':([10,12,13,14,15,25,27,32,42,43,45,],[17,24,28,28,30,40,28,55,28,28,66,]),'term':([10,12,13,14,15,25,27,32,33,34,42,43,45,],[19,19,19,19,19,19,19,19,57,58,19,19,19,]),'factor':([10,12,13,14,15,25,27,32,33,34,35,36,42,43,45,],[20,20,20,20,20,20,20,20,20,20,59,60,20,20,20,]),'condition':([13,14,25,27,42,43,],[26,29,39,44,64,65,]),'relop':([28,40,],[45,45,]),}
 
 _lr_goto = {}
 for _k, _v in _lr_goto_items.items():
@@ -30,31 +30,33 @@ _lr_productions = [
   ('program -> instructions','program',1,'p_program','parser.py',17),
   ('instructions -> instruction instructions','instructions',2,'p_instructions','parser.py',21),
   ('instructions -> instruction','instructions',1,'p_instructions','parser.py',22),
-  ('instruction -> WRITE LPAREN write_args RPAREN END','instruction',5,'p_instruction_write','parser.py',26),
-  ('write_args -> expression','write_args',1,'p_write_args','parser.py',30),
-  ('write_args -> STRING','write_args',1,'p_write_args','parser.py',31),
-  ('write_args -> STRING COMMA expression','write_args',3,'p_write_args','parser.py',32),
-  ('write_args -> expression COMMA expression','write_args',3,'p_write_args','parser.py',33),
-  ('instruction -> CAPTURE LPAREN ID RPAREN END','instruction',5,'p_instruction_capture','parser.py',37),
-  ('instruction -> IF LPAREN condition RPAREN THEN instructions ENDIF','instruction',7,'p_instruction_if','parser.py',41),
-  ('instruction -> ID ASSIGN expression END','instruction',4,'p_instruction_assign','parser.py',45),
-  ('condition -> expression relop expression','condition',3,'p_condition','parser.py',49),
-  ('condition -> condition AND condition','condition',3,'p_condition','parser.py',50),
-  ('condition -> condition OR condition','condition',3,'p_condition','parser.py',51),
-  ('condition -> NOT condition','condition',2,'p_condition','parser.py',52),
-  ('relop -> LT','relop',1,'p_relop','parser.py',59),
-  ('relop -> LE','relop',1,'p_relop','parser.py',60),
-  ('relop -> GT','relop',1,'p_relop','parser.py',61),
-  ('relop -> GE','relop',1,'p_relop','parser.py',62),
-  ('relop -> EQ','relop',1,'p_relop','parser.py',63),
-  ('relop -> NE','relop',1,'p_relop','parser.py',64),
-  ('expression -> expression PLUS term','expression',3,'p_expression','parser.py',68),
-  ('expression -> expression MINUS term','expression',3,'p_expression','parser.py',69),
-  ('expression -> term','expression',1,'p_expression_term','parser.py',73),
-  ('term -> term TIMES factor','term',3,'p_term','parser.py',77),
-  ('term -> term DIVIDE factor','term',3,'p_term','parser.py',78),
-  ('term -> factor','term',1,'p_term_factor','parser.py',82),
-  ('factor -> NUMBER','factor',1,'p_factor_num_id','parser.py',86),
-  ('factor -> ID','factor',1,'p_factor_num_id','parser.py',87),
-  ('factor -> LPAREN expression RPAREN','factor',3,'p_factor_expr','parser.py',91),
+  ('instruction -> WRITE LPAREN write_args RPAREN END','instruction',5,'p_instruction_write','parser.py',30),
+  ('write_args -> write_args COMMA expression','write_args',3,'p_write_args','parser.py',35),
+  ('write_args -> write_args COMMA STRING','write_args',3,'p_write_args','parser.py',36),
+  ('write_args -> expression','write_args',1,'p_write_args','parser.py',37),
+  ('write_args -> STRING','write_args',1,'p_write_args','parser.py',38),
+  ('instruction -> CAPTURE LPAREN ID RPAREN END','instruction',5,'p_instruction_capture','parser.py',52),
+  ('instruction -> IF LPAREN condition RPAREN THEN instructions ENDIF','instruction',7,'p_instruction_if','parser.py',56),
+  ('instruction -> ID ASSIGN expression END','instruction',4,'p_instruction_assign','parser.py',60),
+  ('relop -> LT','relop',1,'p_relop','parser.py',65),
+  ('relop -> LE','relop',1,'p_relop','parser.py',66),
+  ('relop -> GT','relop',1,'p_relop','parser.py',67),
+  ('relop -> GE','relop',1,'p_relop','parser.py',68),
+  ('relop -> EQ','relop',1,'p_relop','parser.py',69),
+  ('relop -> NE','relop',1,'p_relop','parser.py',70),
+  ('expression -> expression PLUS term','expression',3,'p_expression','parser.py',74),
+  ('expression -> expression MINUS term','expression',3,'p_expression','parser.py',75),
+  ('expression -> term','expression',1,'p_expression_term','parser.py',79),
+  ('term -> term TIMES factor','term',3,'p_term','parser.py',83),
+  ('term -> term DIVIDE factor','term',3,'p_term','parser.py',84),
+  ('term -> factor','term',1,'p_term_factor','parser.py',88),
+  ('factor -> NUMBER','factor',1,'p_factor_num_id','parser.py',92),
+  ('factor -> ID','factor',1,'p_factor_num_id','parser.py',93),
+  ('factor -> LPAREN expression RPAREN','factor',3,'p_factor_expr','parser.py',97),
+  ('instruction -> WHILE LPAREN condition RPAREN instructions ENDWHILE','instruction',6,'p_instruction_while','parser.py',101),
+  ('condition -> condition AND condition','condition',3,'p_condition_complex','parser.py',107),
+  ('condition -> condition OR condition','condition',3,'p_condition_complex','parser.py',108),
+  ('condition -> NOT condition','condition',2,'p_condition_complex','parser.py',109),
+  ('condition -> LPAREN condition RPAREN','condition',3,'p_condition_complex','parser.py',110),
+  ('condition -> expression relop expression','condition',3,'p_condition_complex','parser.py',111),
 ]

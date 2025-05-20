@@ -1,0 +1,16 @@
+<h2>Resultado de ejecución</h2>
+
+<h3>Código fuente:</h3>
+<pre>{{ code }}</pre>
+
+<h3>Salida (write):</h3>
+<pre>{{ output }}</pre>
+
+<h3>Estado final de variables:</h3>
+<ul>
+  {% for var, val in variables.items %}
+    <li><strong>{{ var }}</strong>: {{ val }}</li>
+  {% endfor %}
+</ul>
+
+<a href="{% url 'editor' %}?code={{ code|urlencode }}">Volver al editor</a>

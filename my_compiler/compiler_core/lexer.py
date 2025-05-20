@@ -9,7 +9,9 @@ reserved = {
     'end-if': 'ENDIF',
     'and': 'AND',
     'or': 'OR',
-    'not': 'NOT'
+    'not': 'NOT',
+    'while':'WHILE',
+    'end-while':"ENDWHILE"
 }
 
 # Lista de tokens
@@ -57,9 +59,12 @@ def t_ID(t):
     r'[a-zA-Z_][a-zA-Z0-9_-]*'
     if t.value == 'end-if':
         t.type = 'ENDIF'
+    elif t.value == 'end-while':
+        t.type = 'ENDWHILE'
     else:
-        t.type = reserved.get(t.value, 'ID')  # Puede ser palabra reservada o ID
+        t.type = reserved.get(t.value, 'ID')
     return t
+
 
 
 

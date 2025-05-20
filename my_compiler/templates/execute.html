@@ -1,0 +1,178 @@
+<!-- templates/execute.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Ejecutar código</title>
+    <script>
+        let currentStep = 0;
+        let ast = {{ ast_json|safe }};
+        
+        function ejecutarPaso() {
+            if (!ast) {
+                alert("No se ha cargado el AST.");
+                return;
+            }
+
+            fetch("/execute/", {
+                method: "POST",
+                headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                body: new URLSearchParams({
+                    ast: JSON.stringify(ast),
+                    step_mode: "true",
+                    current_step: currentStep,
+                    code: document.getElementById("code-area").value
+                })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    // Format the step data for better readability
+                    const stepOutput = formatStepOutput(data.step);
+                    document.getElementById("output").innerHTML += stepOutput + "<hr>";
+                    
+                    // Format variables for better display
+                    document.getElementById("variables").innerHTML = formatVariables(data.variables);
+                    
+                    currentStep = data.current_step;
+                    if (data.is_last) {
+                        document.getElementById("next-btn").disabled = true;
+                    }
+                } else {
+                    alert(data.error || "Error al ejecutar paso.");
+                }
+            })
+            .catch(err => alert("Error: " + err));
+        }
+
+        function ejecutarCompleto() {
+            if (!ast) {
+                alert("No se ha cargado el AST.");
+                return;
+            }
+
+            fetch("/execute/", {
+                method: "POST",
+                headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                body: new URLSearchParams({
+                    ast: JSON.stringify(ast),
+                    step_mode: "false",
+                    code: document.getElementById("code-area").value
+                })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    const outputElement = document.getElementById("output");
+                    outputElement.innerHTML = ""; // Limpiar antes de escribir
+
+                    // Format each step for better display
+                    data.steps.forEach((step, index) => {
+                        outputElement.innerHTML += `<strong>Paso ${index + 1}:</strong><br>${formatStepOutput(step)}<hr>`;
+                    });
+
+                    // Format variables for better display
+                    document.getElementById("variables").innerHTML = formatVariables(data.variables);
+                } else {
+                    alert(data.error || "Error en ejecución.");
+                }
+            })
+            .catch(err => alert("Error: " + err));
+        }
+        
+        // Helper function to format step output
+        function formatStepOutput(step) {
+            if (!step) return "No hay datos para este paso";
+            
+            let result = `<strong>Línea:</strong> ${step.line}<br>`;
+            
+            if (step.output && step.output.length > 0) {
+                result += `<strong>Salidas:</strong><br>`;
+                step.output.forEach(out => {
+                    result += `- ${out}<br>`;
+                });
+            } else {
+                result += `<strong>Salidas:</strong> No hay salidas<br>`;
+            }
+            
+            return result;
+        }
+        
+        // Helper function to format variables
+        function formatVariables(variables) {
+            if (!variables || Object.keys(variables).length === 0) {
+                return "No hay variables definidas";
+            }
+            
+            let result = "";
+            for (const [key, value] of Object.entries(variables)) {
+                result += `<strong>${key}</strong>: ${value}<br>`;
+            }
+            
+            return result;
+        }
+    </script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            line-height: 1.6;
+        }
+        pre {
+            background-color: #f4f4f4;
+            padding: 10px;
+            border-radius: 5px;
+            overflow: auto;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        button:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
+        textarea {
+            width: 100%;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+        }
+        hr {
+            border: 0;
+            height: 1px;
+            background: #ddd;
+            margin: 10px 0;
+        }
+        h1, h2 {
+            color: #333;
+        }
+        #output, #variables {
+            background-color: #f9f9f9;
+            padding: 15px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+        }
+    </style>
+</head>
+<body>
+    <h1>Ejecutar Código</h1>
+    <textarea id="code-area" rows="10" cols="80">{{ code }}</textarea><br><br>
+
+    <button onclick="ejecutarPaso()" id="next-btn">Siguiente paso</button>
+    <button onclick="ejecutarCompleto()">Ejecutar todo</button>
+
+    <h2>Salida:</h2>
+    <div id="output"></div>
+
+    <h2>Estado de Variables:</h2>
+    <div id="variables">No hay variables definidas</div>
+</body>
+</html>
